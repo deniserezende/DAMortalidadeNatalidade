@@ -11,16 +11,3 @@ Deve-se implementar um esquema relacional de banco de dados que faça o armazena
 O sistema deve ter uma opção de upload de arquivos de dados para carga do banco de dados. Ao receber um arquivo, o sistema deverá processá-lo e fazer as inserções correspondentes no banco de dados, utilizando, necessariamente um ou mais controllers e os objetos das camadas de model e de acesso a dados. Também deve ser apresentada uma listagem das cargas, contendo o nome do conjunto de dados, a data e hora da carga de dados e o número de tuplas carregadas.
 
 O sistema também deve apresentar relatórios a respeito dos conjuntos de dados, utilizando gráficos, tabelas e informações relevantes. Espera-se que as consultas utilizadas para produzir os relatórios explorem diferentes recursos da linguagem SQL (junções internas e externas, agregações, agrupamentos, ranking, ordenações, subconsultas, filtros diversos, etc.). Os relatórios também fazendo uso de objetos da camada de acesso a dados, possivelmente, objetos específicos para a geração dos relatórios.
-
-Parte 1) Data: 13/10 (fase atual de desenvolvimento)
-- Descrição dos conjuntos de dados escolhidos e indicação de relatórios relevantes a serem construídos.
-- Sample dos conjuntos de dados, com até 30 tuplas cada
-- Diagrama ER para acomodar os conjuntos de dados sem redundâncias, esquema relacional de banco de dados normalizado e script de implementação do esquema em SQL, com todas as restrições de integridade aplicáveis aos conjuntos de dados
-- Instruções SQL de inserção das tuplas do sample apresentado no esquema implementado
-- Banco de dados funcional e com algumas cargas efetuadas
-
-Parte 2) Data: 03/11
-- Sistema rodando com funcionalidades de carga de dados
-
-Parte 3) Data: 30/11
-- Sistema finalizado, incluindo os relatórios
