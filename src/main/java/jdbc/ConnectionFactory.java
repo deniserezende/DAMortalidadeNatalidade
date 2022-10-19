@@ -57,6 +57,7 @@ public abstract class ConnectionFactory {
         return dbServer;
     }
 
+    // This abstract method will be implemented by the subclasses
     public abstract Connection getConnection() throws IOException, SQLException, ClassNotFoundException;
 
 }
