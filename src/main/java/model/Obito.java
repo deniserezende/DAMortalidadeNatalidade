@@ -3,9 +3,6 @@ package model;
 import java.sql.Date;
 
 public class Obito {
-    // TODO delete this later
-//    private Integer id_registro; // FOREIGN KEY
-//    private String tipo_registro; // FOREIGN KEY
     private Registro registro = null;
     private Integer cod_est_civ_falecido; // FOREIGN KEY
     private Integer cod_municipio_obito; // FOREIGN KEY
