@@ -1,4 +1,7 @@
 package dao;
 
-public interface ObitoDAO {
+import model.Registrado;
+
+public interface ObitoDAO extends DAO<Registrado> {
+
 }
