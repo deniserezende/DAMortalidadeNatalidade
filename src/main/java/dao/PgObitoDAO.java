@@ -39,13 +39,6 @@ public class PgObitoDAO implements ObitoDAO{
                     "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n " +
                     "AND id_registrado = ?;";
 
-
-    // TODO delete this after finnished
-//    SELECT *
-//    FROM "DAMortalidade_Natalidade"."OBITO", "DAMortalidade_Natalidade"."REGISTRADO"
-//    WHERE "DAMortalidade_Natalidade"."OBITO".id_registro = "DAMortalidade_Natalidade"."REGISTRADO".id_registro_obt
-//    AND "DAMortalidade_Natalidade"."OBITO".tipo_registro = "DAMortalidade_Natalidade"."REGISTRADO".tipo_registro_obt;
-
     // TODO check if I should be able to update registro
 //    private static final String UPDATE_REGISTRO =
 //            "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
@@ -131,6 +124,7 @@ public class PgObitoDAO implements ObitoDAO{
             logger.error(error.getMessage());
         }
     }
+    // TODO colocar uma transação no create
     @Override
     public void create(Registrado registrado) throws SQLException {
         create_registro(registrado.getObito().getRegistro());
