@@ -41,8 +41,9 @@ import static sun.font.CreatedFontTracker.MAX_FILE_SIZE;
 
 @WebServlet(name = "CargaController",
             urlPatterns = {
-                "",
-                "/carga/create", "/historico"
+                    "",
+                    "/carga/create",
+                    "/historico" //é o /user do projeto do professor
             }
 )
 
