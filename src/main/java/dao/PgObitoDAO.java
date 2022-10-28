@@ -21,56 +21,48 @@ public class PgObitoDAO implements ObitoDAO{
     protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
 
     private static final String CREATE_REGISTRO =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro) " +
-                    "VALUES(?, ?);";
+            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro, ano_registro) " +
+                    "VALUES(?, ?, ?);";
     private static final String CREATE_OBITO =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"OBITO\"(cod_tipo_obito, data_obito, hora_obito, " +
                     "idade_falecido, cod_est_civ_falecido, cod_local_obito, cod_municipio_obito, cod_circ_obito, " +
-                    "id_registro, tipo_registro) " +
-                    "VALUES(?, to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?, ?, ?, ?);";
+                    "id_registro, tipo_registro, ano_registro) " +
+                    "VALUES(?, to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String CREATE_REGISTRADO =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt," +
+            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt" +
                     "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
-                    "VALUES(?, 'obito', ?, to_date(?, 'ddmmyyyy'), ?);";
+                    "VALUES(?, ?, ?, ?, to_date(?, 'ddmmyyyy'), ?);";
+            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro) " +
+                    "VALUES(?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\" " +
                     "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = " +
                     "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n " +
+                    "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
+                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n " +
+                    "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
+                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n " +
                     "AND id_registrado = ?;";
-
-
-    // TODO delete this after finnished
-//    SELECT *
-//    FROM "DAMortalidade_Natalidade"."OBITO", "DAMortalidade_Natalidade"."REGISTRADO"
-//    WHERE "DAMortalidade_Natalidade"."OBITO".id_registro = "DAMortalidade_Natalidade"."REGISTRADO".id_registro_obt
-//    AND "DAMortalidade_Natalidade"."OBITO".tipo_registro = "DAMortalidade_Natalidade"."REGISTRADO".tipo_registro_obt;
-
-    // TODO check if I should be able to update registro
-//    private static final String UPDATE_REGISTRO =
-//            "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
-//                    "SET id_registro = ?, tipo_registro = ?" +
-//                    "WHERE id_registro = ?;";
 
     private static final String UPDATE_OBITO =
             "UPDATE \"DAMortalidade_Natalidade\".\"OBITO\"" +
                     "SET cod_tipo_obito = ?, data_obito = ?, hora_obito = ?, idade_falecido = ?, " +
                     "cod_est_civ_falecido = ?, cod_local_obito = ?, cod_municipio_obito = ?, cod_circ_obito = ?" +
-                    "WHERE id_registro = ? AND tipo_registro = ?;";
+                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?;";
 
     private static final String UPDATE_REGISTRADO =
             "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
                     "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ?, " +
-                    "WHERE id_registro_obt = ?, tipo_registro_obt = 'obito';";
-
+                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro = ?;";
 
     private static final String DELETE_QUERY =
             "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
-            "WHERE id_registro_obt = ? AND tipo_registro_obt = ?; \n " +
+            "WHERE id_registrado = ?; \n " +
             "DELETE FROM \"DAMortalidade_Natalidade\".\"OBITO\" \" +\n" +
-            "WHERE id_registro = ? AND tipo_registro = ?; \n " +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n " +
             "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\" \" +\n" +
-            "WHERE id_registro = ? AND tipo_registro = ?; \n";
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
 
     private static final String ALL_QUERY =
             "SELECT *\n" +
@@ -78,7 +70,9 @@ public class PgObitoDAO implements ObitoDAO{
             "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = " +
             "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n" +
             "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
-            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt;";
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt;" +
+            "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n ";
 
     public PgObitoDAO(Connection connection) {
         this.connection = connection;
@@ -88,6 +82,8 @@ public class PgObitoDAO implements ObitoDAO{
         try (PreparedStatement statement = connection.prepareStatement(CREATE_REGISTRO)) {
             statement.setInt(1, registro.getId_registro());
             statement.setString(2, registro.getTipo_registro());
+            statement.setInt(3, registro.getAno_registro());
+
 
             statement.executeUpdate();
         } catch (SQLException error) {
@@ -108,6 +104,7 @@ public class PgObitoDAO implements ObitoDAO{
             statement.setInt(8, obito.getCod_circ_obito());
             statement.setInt(9, obito.getRegistro().getId_registro());
             statement.setString(10, obito.getRegistro().getTipo_registro());
+            statement.setInt(11, obito.getRegistro().getAno_registro());
 
             statement.executeUpdate();
         } catch (SQLException error) {
@@ -120,10 +117,11 @@ public class PgObitoDAO implements ObitoDAO{
         try (PreparedStatement statement = connection.prepareStatement(CREATE_REGISTRADO)) {
             statement.setInt(1, registrado.getObito().getRegistro().getId_registro());
             statement.setString(2, registrado.getObito().getRegistro().getTipo_registro());
-            statement.setInt(3, registrado.getCod_municipio_nasc());
-            statement.setInt(4, registrado.getCod_raca_cor());
-            statement.setDate(5, registrado.getData_nascimento());
-            statement.setInt(6, registrado.getCod_sexo());
+            statement.setInt(3, registrado.getObito().getRegistro().getAno_registro());
+            statement.setInt(4, registrado.getCod_municipio_nasc());
+            statement.setInt(5, registrado.getCod_raca_cor());
+            statement.setDate(6, registrado.getData_nascimento());
+            statement.setInt(7, registrado.getCod_sexo());
 
             statement.executeUpdate();
         } catch (SQLException error) {
@@ -131,6 +129,8 @@ public class PgObitoDAO implements ObitoDAO{
             logger.error(error.getMessage());
         }
     }
+
+    // TODO colocar uma transação no create
     @Override
     public void create(Registrado registrado) throws SQLException {
         create_registro(registrado.getObito().getRegistro());
@@ -144,6 +144,7 @@ public class PgObitoDAO implements ObitoDAO{
 
         try (PreparedStatement statement = connection.prepareStatement(READ_QUERY)) {
             statement.setInt(1, id_registrado);
+
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
                     // Creating Obito
@@ -177,7 +178,7 @@ public class PgObitoDAO implements ObitoDAO{
                     registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
                     registrado.setData_nascimento(result.getDate("data_nascimento"));
                 } else {
-                    throw new SQLException("Erro ao visualizar: usuário não encontrado.");
+                    throw new SQLException("Erro ao visualizar: registrado não encontrado.");
                 }
             }
         } catch (SQLException error) {
@@ -189,6 +190,7 @@ public class PgObitoDAO implements ObitoDAO{
     }
 
     private void update_obito(Obito obito) throws SQLException{
+        // TODO deletar isso depois se não for útil
         // poderia fazer aqui ele escolher qual query usar, se eu tivesse múltiplos
 //        String query;
 //
@@ -211,6 +213,7 @@ public class PgObitoDAO implements ObitoDAO{
             statement.setInt(8, obito.getCod_circ_obito());
             statement.setInt(9, obito.getRegistro().getId_registro());
             statement.setString(10, obito.getRegistro().getTipo_registro());
+            statement.setInt(11, obito.getRegistro().getAno_registro());
 
             if (statement.executeUpdate() < 1) {
                 throw new SQLException("Error to update: obito registrado não encontrado.");
@@ -228,7 +231,8 @@ public class PgObitoDAO implements ObitoDAO{
             statement.setInt(4, registrado.getCod_sexo());
             statement.setInt(5, registrado.getObito().getRegistro().getId_registro());
             statement.setString(6, registrado.getObito().getRegistro().getTipo_registro());
-
+            statement.setInt(7, registrado.getObito().getRegistro().getAno_registro());
+            
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("update_registrado catch: " + error);
@@ -243,9 +247,16 @@ public class PgObitoDAO implements ObitoDAO{
     }
 
     @Override
-    public void delete(Integer id_registro) throws SQLException {
+    public void delete(Integer id_registrado) throws SQLException {
+        Registrado registrado = read(id_registrado);
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setInt(1, id_registro);
+            statement.setInt(1, id_registrado);
+            statement.setInt(2, registrado.getObito().getRegistro().getId_registro());
+            statement.setString(3, registrado.getObito().getRegistro().getTipo_registro());
+            statement.setInt(4, registrado.getObito().getRegistro().getAno_registro());
+            statement.setInt(5, registrado.getObito().getRegistro().getId_registro());
+            statement.setString(6, registrado.getObito().getRegistro().getTipo_registro());
+            statement.setInt(7, registrado.getObito().getRegistro().getAno_registro());
 
             if (statement.executeUpdate() < 1) {
                 throw new SQLException("Error to delete: obito registrado não encontrado.");
@@ -266,6 +277,8 @@ public class PgObitoDAO implements ObitoDAO{
                 Registrado registrado = new Registrado();
                 // TODO colocar outras infos que vou querer nessa lista
                 registrado.getObito().getRegistro().setId_registro(result.getInt("id_registro"));
+                registrado.getObito().getRegistro().setTipo_registro(result.getString("tipo_registro"));
+                registrado.getObito().getRegistro().setAno_registro(result.getInt("ano_registro"));
 
                 registradoList.add(registrado);
             }
