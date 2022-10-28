@@ -30,7 +30,7 @@
             </a>
         </div>
 
-        <form class="form_excluir_usuarios" action="${pageContext.servletContext.contextPath}/user/delete" method="POST">
+        <form class="form_histoico_cargas" action="${pageContext.servletContext.contextPath}/historico" method="POST">
             <table class="table table-striped">
                 <thead>
                 <tr>

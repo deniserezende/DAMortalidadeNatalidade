@@ -9,7 +9,7 @@ import dao.DAOFactory;
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
 //import jakarta.servlet.http.HttpSession;
-import dao.PgObitoDAO;
+import dao.PgCargaDAO;
 import model.Carga;
 
 import java.io.File;
@@ -49,7 +49,7 @@ import static sun.font.CreatedFontTracker.MAX_FILE_SIZE;
 
 public class CargaController extends HttpServlet{
 
-    protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
+    protected static final Logger logger = LogManager.getLogger(CargaController.class);
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -205,7 +205,7 @@ public class CargaController extends HttpServlet{
                 }
                 break;
             }
-            case "/carga": {
+            case "/historico": {
                 session = request.getSession(false);
                 if (session != null) {
                     session.invalidate();

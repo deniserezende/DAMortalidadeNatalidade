@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PgCargaDAO implements CargaDAO {
     private final Connection connection;
-    protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
+    protected static final Logger logger = LogManager.getLogger(PgCargaDAO.class);
 
     private static final String CREATE_QUERY =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"CARGA\"(data_carga, hora_carga, responsavel, email, " +
