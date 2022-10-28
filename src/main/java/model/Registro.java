@@ -5,6 +5,7 @@ public class Registro {
     private String tipo_registro;
     private Integer ano_registro;
 
+
     public Integer getId_registro() {
         return id_registro;
     }

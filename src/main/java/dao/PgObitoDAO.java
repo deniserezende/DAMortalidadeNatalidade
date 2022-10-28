@@ -32,6 +32,8 @@ public class PgObitoDAO implements ObitoDAO{
             "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt" +
                     "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
                     "VALUES(?, ?, ?, ?, to_date(?, 'ddmmyyyy'), ?);";
+            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro) " +
+                    "VALUES(?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\" " +
@@ -53,7 +55,6 @@ public class PgObitoDAO implements ObitoDAO{
             "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
                     "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ?, " +
                     "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro = ?;";
-
 
     private static final String DELETE_QUERY =
             "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
@@ -82,6 +83,7 @@ public class PgObitoDAO implements ObitoDAO{
             statement.setInt(1, registro.getId_registro());
             statement.setString(2, registro.getTipo_registro());
             statement.setInt(3, registro.getAno_registro());
+
 
             statement.executeUpdate();
         } catch (SQLException error) {
@@ -127,6 +129,7 @@ public class PgObitoDAO implements ObitoDAO{
             logger.error(error.getMessage());
         }
     }
+
     // TODO colocar uma transação no create
     @Override
     public void create(Registrado registrado) throws SQLException {
@@ -229,7 +232,7 @@ public class PgObitoDAO implements ObitoDAO{
             statement.setInt(5, registrado.getObito().getRegistro().getId_registro());
             statement.setString(6, registrado.getObito().getRegistro().getTipo_registro());
             statement.setInt(7, registrado.getObito().getRegistro().getAno_registro());
-
+            
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("update_registrado catch: " + error);
