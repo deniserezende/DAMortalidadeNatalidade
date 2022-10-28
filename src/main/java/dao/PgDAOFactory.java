@@ -8,6 +8,11 @@ public class PgDAOFactory extends DAOFactory {
         this.connection = connection;
     }
 
+    @Override
+    public CargaDAO getCargaDAO() {
+        return new PgCargaDAO(this.connection);
+    }
+
     // TODO why do I have to implement this:
     @Override
     public void close() throws Exception {
