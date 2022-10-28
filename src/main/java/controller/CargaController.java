@@ -28,7 +28,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+//import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -52,7 +52,7 @@ public class CargaController extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session;
+        //HttpSession session;
         RequestDispatcher dispatcher;
         DAO<Carga> dao;
 
@@ -111,7 +111,7 @@ public class CargaController extends HttpServlet{
 
                 try (DAOFactory daoFactory = DAOFactory.getInstance()) {
                     // Parse the request
-                    List<FileItem> items = upload.parseRequest((javax.servlet.http.HttpServletRequest) request);
+                    List<FileItem> items = upload.parseRequest(request);
 
                     // Process the uploaded items
                     Iterator<FileItem> iter = items.iterator();
@@ -132,7 +132,7 @@ public class CargaController extends HttpServlet{
                                     carga.setTipo_carga(Integer.valueOf(fieldName));
                                     break;
                                 case "data_carga":
-                                    java.util.Date date = new SimpleDateFormat("ddmmyyyy").parse(fieldValue);
+                                    java.util.Date date = new SimpleDateFormat("ddMMyyyy").parse(fieldValue);
                                     carga.setData_carga((java.sql.Date) date);
                                     break;
                                 case "hora_carga":
@@ -209,7 +209,7 @@ public class CargaController extends HttpServlet{
                 if (session != null) {
                     session.invalidate();
                 }
-                response.sendRedirect(request.getContextPath() + "/view/index.jsp");
+                response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp");
             }
 //            case "/user/delete": {
 //                String[] users = request.getParameterValues("delete");
