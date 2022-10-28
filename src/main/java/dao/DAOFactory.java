@@ -73,4 +73,6 @@ public abstract class DAOFactory implements AutoCloseable{
 //            throw new SQLException("Erro ao fechar conexão ao banco de dados.");
 //        }
 //    }
+
+    public abstract CargaDAO getCargaDAO();
 }
