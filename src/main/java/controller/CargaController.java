@@ -39,7 +39,6 @@ import javax.servlet.http.HttpSession;
 
 import static sun.font.CreatedFontTracker.MAX_FILE_SIZE;
 
-
 @WebServlet(name = "CargaController",
             urlPatterns = {
                 "",
@@ -47,30 +46,15 @@ import static sun.font.CreatedFontTracker.MAX_FILE_SIZE;
             }
 )
 
-public class CargaController extends HttpServlet {
+public class CargaController extends HttpServlet{
 
     protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         HttpSession session;
         RequestDispatcher dispatcher;
         DAO<Carga> dao;
-@WebServlet(name = "CargaController",
-            urlPatterns = {
-                "",
-                "/carga"
-            }
-)
-
-public class CargaController extends HttpServlet{
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session;
-        RequestDispatcher dispatcher;
 
         switch (request.getServletPath()) {
             case "": {
@@ -94,7 +78,6 @@ public class CargaController extends HttpServlet{
             case "/carga/create": {
                 dispatcher = request.getRequestDispatcher("/view/carga/create.jsp");
                 dispatcher.forward(request, response);
-
                 break;
             }
         }
@@ -221,7 +204,13 @@ public class CargaController extends HttpServlet{
                 }
                 break;
             }
-
+            case "/carga": {
+                session = request.getSession(false);
+                if (session != null) {
+                    session.invalidate();
+                }
+                response.sendRedirect(request.getContextPath() + "/view/index.jsp");
+            }
 //            case "/user/delete": {
 //                String[] users = request.getParameterValues("delete");
 //
@@ -252,16 +241,6 @@ public class CargaController extends HttpServlet{
 //                response.sendRedirect(request.getContextPath() + "/user");
 //                break;
 //            }
-        }
-    }
-}
-            case "/carga": {
-                session = request.getSession(false);
-                if (session != null) {
-                    session.invalidate();
-                }
-                response.sendRedirect(request.getContextPath() + "/view/index.jsp");
-            }
         }
     }
 }
