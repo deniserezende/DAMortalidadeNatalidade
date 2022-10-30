@@ -3,8 +3,6 @@ package model;
 import java.sql.Date;
 
 public class Nascimento {
-    //    private Integer id_registro; // FOREIGN KEY
-    //    private String tipo_registro; // FOREIGN KEY
     private Registro registro;
     private Integer hora_nascimento;
     private Integer idade_mae;
