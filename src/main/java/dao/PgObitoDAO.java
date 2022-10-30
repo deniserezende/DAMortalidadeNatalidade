@@ -32,8 +32,6 @@ public class PgObitoDAO implements ObitoDAO{
             "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt" +
                     "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
                     "VALUES(?, ?, ?, ?, to_date(?, 'ddmmyyyy'), ?);";
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro) " +
-                    "VALUES(?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\" " +
