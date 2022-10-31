@@ -86,7 +86,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_registro catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -107,7 +106,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_obito catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -124,7 +122,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_registrado catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -182,7 +179,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("read catch: " + error);
-            logger.error(error.getMessage());
         }
 
         return registrado;
@@ -235,7 +231,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("update_registrado catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -262,7 +257,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("delete catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -283,7 +277,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            logger.error(error.getMessage());
             throw new SQLException("Error listing registrados.");
         }
 
