@@ -85,8 +85,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
 
             statement.executeUpdate();
         } catch (SQLException error) {
-            logger.error("create_registro in PgNascimentoDAO catch: " + error);
-            logger.error(error.getMessage());
+            logger.error("create_registro catch: " + error);
         }
     }
 
@@ -101,8 +100,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
 
             statement.executeUpdate();
         } catch (SQLException error) {
-            logger.error("create_nascimento in PgNascimentoDAO catch: " + error);
-            logger.error(error.getMessage());
+            logger.error("create_nascimento catch: " + error);
         }
     }
 
@@ -118,8 +116,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
 
             statement.executeUpdate();
         } catch (SQLException error) {
-            logger.error("create_registrado in PgNascimentoDAO catch: " + error);
-            logger.error(error.getMessage());
+            logger.error("create_registrado catch: " + error);
         }
     }
 
@@ -174,8 +171,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
                 }
             }
         } catch (SQLException error) {
-            logger.error("read catch in PgNascimentoDAO: " + error);
-            logger.error(error.getMessage());
+            logger.error("read catch: " + error);
         }
 
         return registrado;
@@ -226,8 +222,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
 
             statement.executeUpdate();
         } catch (SQLException error) {
-            logger.error("update_registrado catch in PgNascimentoDAO: " + error);
-            logger.error(error.getMessage());
+            logger.error("update_registrado catch: " + error);
         }
     }
 
@@ -253,8 +248,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
                 throw new SQLException("Error to delete: nascimento registrado não encontrado em PgNascimentoDAO.");
             }
         } catch (SQLException error) {
-            logger.error("delete catch in PgNascimentoDAO: " + error);
-            logger.error(error.getMessage());
+            logger.error("delete catch: " + error);
         }
     }
 
@@ -274,8 +268,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
                 registradoList.add(registrado);
             }
         } catch (SQLException error) {
-            logger.error("all catch in PgNascimentoDAO: " + error);
-            logger.error(error.getMessage());
+            logger.error("all catch: " + error);
             throw new SQLException("Error listing registrados in PgNascimentoDAO.");
         }
 
