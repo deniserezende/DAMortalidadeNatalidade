@@ -1,10 +1,10 @@
 package model;
 
-import java.sql.Date;
+import java.sql.Time;
 
 public class Nascimento {
     private Registro registro;
-    private Integer hora_nascimento;
+    private Time hora_nascimento;
     private Integer idade_mae;
     private Integer peso_nascido_vivo;
     private Integer cod_tipo_parto; // FOREIGN KEY
@@ -19,11 +19,11 @@ public class Nascimento {
         this.registro = registro;
     }
 
-    public Integer getHora_nascimento() {
+    public Time getHora_nascimento() {
         return hora_nascimento;
     }
 
-    public void setHora_nascimento(Integer hora_nascimento) {
+    public void setHora_nascimento(Time hora_nascimento) {
         this.hora_nascimento = hora_nascimento;
     }
 

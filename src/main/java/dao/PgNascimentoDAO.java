@@ -156,7 +156,7 @@ public class PgNascimentoDAO implements NascimentoDAO{
                     registrado.getNascimento().getRegistro().setAno_registro(result.getInt("ano_registro_nasc"));
 
                     // Setting attributes Nascimento
-                    registrado.getNascimento().setHora_nascimento(result.getInt("hora_nascimento"));
+                    registrado.getNascimento().setHora_nascimento(result.getTime("hora_nascimento"));
                     registrado.getNascimento().setCod_tipo_parto(result.getInt("cod_tipo_parto"));
                     registrado.getNascimento().setCod_raca_cor_mae(result.getInt("cod_raca_cor_mae"));
                     registrado.getNascimento().setIdade_mae(result.getInt("idade_mae"));
