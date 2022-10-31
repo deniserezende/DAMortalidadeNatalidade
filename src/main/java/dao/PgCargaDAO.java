@@ -48,7 +48,6 @@ public class PgCargaDAO implements CargaDAO {
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -74,7 +73,6 @@ public class PgCargaDAO implements CargaDAO {
             }
         } catch (SQLException error) {
             logger.error("read catch: " + error);
-            logger.error(error.getMessage());
         }
 
         return carga;
@@ -97,7 +95,6 @@ public class PgCargaDAO implements CargaDAO {
             }
         } catch (SQLException error) {
             logger.error("delete catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -119,7 +116,6 @@ public class PgCargaDAO implements CargaDAO {
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            logger.error(error.getMessage());
             throw new SQLException("Error listing cargas.");
         }
 
