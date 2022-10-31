@@ -32,8 +32,6 @@ public class PgObitoDAO implements ObitoDAO{
             "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt" +
                     "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
                     "VALUES(?, ?, ?, ?, to_date(?, 'ddmmyyyy'), ?);";
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro) " +
-                    "VALUES(?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\" " +
@@ -54,7 +52,7 @@ public class PgObitoDAO implements ObitoDAO{
     private static final String UPDATE_REGISTRADO =
             "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
                     "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ?, " +
-                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro = ?;";
+                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
 
     private static final String DELETE_QUERY =
             "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
@@ -160,6 +158,7 @@ public class PgObitoDAO implements ObitoDAO{
                     // Setting attributes Registro
                     registrado.getObito().getRegistro().setId_registro(result.getInt("id_registro_obt"));
                     registrado.getObito().getRegistro().setTipo_registro(result.getString("tipo_registro_obt"));
+                    registrado.getObito().getRegistro().setAno_registro(result.getInt("ano_registro_obt"));
 
                     // Setting attributes Obito
                     registrado.getObito().setData_obito(result.getDate("data_obito"));
