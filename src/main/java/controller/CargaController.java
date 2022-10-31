@@ -2,6 +2,7 @@ package controller;
 
 import dao.DAO;
 import dao.DAOFactory;
+import dao.CSVReader;
 //import jakarta.servlet.RequestDispatcher;
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.annotation.WebServlet;
@@ -149,6 +150,11 @@ public class CargaController extends HttpServlet{
                                     break;
                             }
                         }
+
+                        // TODO open file and insert tuples
+                        CSVReader csvReader = new CSVReader();
+                        csvReader.read_file(carga.getNome_arquivo());
+
 //                        else {
 //                            String fieldName = item.getFieldName();
 //                            String fileName = item.getName();

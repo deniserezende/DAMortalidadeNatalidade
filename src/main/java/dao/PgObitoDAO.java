@@ -52,7 +52,7 @@ public class PgObitoDAO implements ObitoDAO{
     private static final String UPDATE_REGISTRADO =
             "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
                     "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ?, " +
-                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro = ?;";
+                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
 
     private static final String DELETE_QUERY =
             "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
@@ -86,7 +86,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_registro catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -107,7 +106,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_obito catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -124,7 +122,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_registrado catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -158,6 +155,7 @@ public class PgObitoDAO implements ObitoDAO{
                     // Setting attributes Registro
                     registrado.getObito().getRegistro().setId_registro(result.getInt("id_registro_obt"));
                     registrado.getObito().getRegistro().setTipo_registro(result.getString("tipo_registro_obt"));
+                    registrado.getObito().getRegistro().setAno_registro(result.getInt("ano_registro_obt"));
 
                     // Setting attributes Obito
                     registrado.getObito().setData_obito(result.getDate("data_obito"));
@@ -181,7 +179,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("read catch: " + error);
-            logger.error(error.getMessage());
         }
 
         return registrado;
@@ -234,7 +231,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("update_registrado catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -261,7 +257,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("delete catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -282,7 +277,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            logger.error(error.getMessage());
             throw new SQLException("Error listing registrados.");
         }
 
