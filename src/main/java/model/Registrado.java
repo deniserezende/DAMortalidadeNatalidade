@@ -66,11 +66,4 @@ public class Registrado {
     public void setCod_sexo(Integer cod_sexo) {
         this.cod_sexo = cod_sexo;
     }
-
-    // TODO delete this later
-
-    /*  private Integer id_registro_nasc; // FOREIGN KEY
-    private String tipo_registro_nasc; // FOREIGN KEY
-    private Integer id_registro_obt; // FOREIGN KEY
-    private String tipo_registro_obt; // FOREIGN KEY */
 }
