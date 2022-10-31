@@ -9,7 +9,7 @@ import dao.DAOFactory;
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
 //import jakarta.servlet.http.HttpSession;
-import dao.PgObitoDAO;
+import dao.PgCargaDAO;
 import model.Carga;
 
 import java.io.File;
@@ -28,7 +28,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+//import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,38 +39,23 @@ import javax.servlet.http.HttpSession;
 
 import static sun.font.CreatedFontTracker.MAX_FILE_SIZE;
 
-
 @WebServlet(name = "CargaController",
             urlPatterns = {
-                "",
-                "/carga/create", "/historico"
-            }
-)
-
-public class CargaController extends HttpServlet {
-
-    protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        HttpSession session;
-        RequestDispatcher dispatcher;
-        DAO<Carga> dao;
-@WebServlet(name = "CargaController",
-            urlPatterns = {
-                "",
-                "/carga"
+                    "",
+                    "/carga/create",
+                    "/historico" //é o /user do projeto do professor
             }
 )
 
 public class CargaController extends HttpServlet{
+
+    protected static final Logger logger = LogManager.getLogger(CargaController.class);
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session;
+        //HttpSession session;
         RequestDispatcher dispatcher;
+        DAO<Carga> dao;
 
         switch (request.getServletPath()) {
             case "": {
@@ -94,7 +79,6 @@ public class CargaController extends HttpServlet{
             case "/carga/create": {
                 dispatcher = request.getRequestDispatcher("/view/carga/create.jsp");
                 dispatcher.forward(request, response);
-
                 break;
             }
         }
@@ -128,7 +112,7 @@ public class CargaController extends HttpServlet{
 
                 try (DAOFactory daoFactory = DAOFactory.getInstance()) {
                     // Parse the request
-                    List<FileItem> items = upload.parseRequest((javax.servlet.http.HttpServletRequest) request);
+                    List<FileItem> items = upload.parseRequest(request);
 
                     // Process the uploaded items
                     Iterator<FileItem> iter = items.iterator();
@@ -149,7 +133,7 @@ public class CargaController extends HttpServlet{
                                     carga.setTipo_carga(Integer.valueOf(fieldName));
                                     break;
                                 case "data_carga":
-                                    java.util.Date date = new SimpleDateFormat("ddmmyyyy").parse(fieldValue);
+                                    java.util.Date date = new SimpleDateFormat("ddMMyyyy").parse(fieldValue);
                                     carga.setData_carga((java.sql.Date) date);
                                     break;
                                 case "hora_carga":
@@ -221,7 +205,13 @@ public class CargaController extends HttpServlet{
                 }
                 break;
             }
-
+            case "/historico": {
+                session = request.getSession(false);
+                if (session != null) {
+                    session.invalidate();
+                }
+                response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp");
+            }
 //            case "/user/delete": {
 //                String[] users = request.getParameterValues("delete");
 //
@@ -252,16 +242,6 @@ public class CargaController extends HttpServlet{
 //                response.sendRedirect(request.getContextPath() + "/user");
 //                break;
 //            }
-        }
-    }
-}
-            case "/carga": {
-                session = request.getSession(false);
-                if (session != null) {
-                    session.invalidate();
-                }
-                response.sendRedirect(request.getContextPath() + "/view/index.jsp");
-            }
         }
     }
 }

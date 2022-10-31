@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PgCargaDAO implements CargaDAO {
     private final Connection connection;
-    protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
+    protected static final Logger logger = LogManager.getLogger(PgCargaDAO.class);
 
     private static final String CREATE_QUERY =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"CARGA\"(data_carga, hora_carga, responsavel, email, " +
@@ -69,7 +69,7 @@ public class PgCargaDAO implements CargaDAO {
                     carga.setResponsavel(result.getString("resposavel"));
 
                 } else {
-                    throw new SQLException("Erro ao visualizar: carga não encontrado.");
+                    throw new SQLException("Erro ao visualizar: carga não encontrada.");
                 }
             }
         } catch (SQLException error) {
@@ -93,7 +93,7 @@ public class PgCargaDAO implements CargaDAO {
             statement.setInt(1, id);
 
             if (statement.executeUpdate() < 1) {
-                throw new SQLException("Error to delete: obito registrado não encontrado.");
+                throw new SQLException("Error to delete: carga não encontrada.");
             }
         } catch (SQLException error) {
             logger.error("delete catch: " + error);
