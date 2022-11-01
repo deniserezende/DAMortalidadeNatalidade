@@ -1,0 +1,51 @@
+html {
+    margin: 2% 0 0;
+    font-size: 10px; /* px significa "pixels": o tamanho da fonte base é agora de 10 pixels */
+    font-family: 'Merriweather', serif;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    width: 90%;
+    margin: 0;
+    background-color: whitesmoke;
+    padding: 20px;
+    border: 2px solid lightgray;
+}
+
+h1 {
+    margin: 0;
+    font-size: 50px;
+    padding: 20px 0;
+}
+h2 {
+    margin: 0;
+    font-size: 35px;
+}
+
+h1, h2 {
+    text-align: center;
+    font-family: 'Merriweather', serif; /*nome da fonte escolhida no Google Fonts */
+}
+
+h3 {
+    margin: 25px 0 0;
+    font-size: 30px;
+}
+
+h4 {
+    margin: 25px 0 0;
+    font-size: 20px;
+}
+
+h3, h4 {
+    font-family: 'Merriweather', serif; /*nome da fonte escolhida no Google Fonts */
+}
+
+p {
+    margin: 10px 0 0;
+    font-size: 15px;
+    line-height: 2;
+}
