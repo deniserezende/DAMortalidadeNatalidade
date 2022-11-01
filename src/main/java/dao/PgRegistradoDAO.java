@@ -66,6 +66,10 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = " +
                     "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n " +
                     "AND id_registrado = ?;";
+
+    private static final String READ_QUERY =
+            "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" " +
+                    "WHERE id_registrado = ?;";
     private static final String UPDATE_OBITO =
             "UPDATE \"DAMortalidade_Natalidade\".\"OBITO\"" +
                     "SET cod_tipo_obito = ?, data_obito = ?, hora_obito = ?, idade_falecido = ?, " +
@@ -170,11 +174,27 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
-    private void create_registrado(Registrado registrado) throws SQLException{
+    private void create_registrado_obt(Registrado registrado) throws SQLException{
         try (PreparedStatement statement = connection.prepareStatement(CREATE_REGISTRADO_OBT)) {
             statement.setInt(1, registrado.getObito().getRegistro().getId_registro());
             statement.setString(2, registrado.getObito().getRegistro().getTipo_registro());
             statement.setInt(3, registrado.getObito().getRegistro().getAno_registro());
+            statement.setInt(4, registrado.getCod_municipio_nasc());
+            statement.setInt(5, registrado.getCod_raca_cor());
+            statement.setDate(6, registrado.getData_nascimento());
+            statement.setInt(7, registrado.getCod_sexo());
+
+            statement.executeUpdate();
+        } catch (SQLException error) {
+            logger.error("create_registrado catch: " + error);
+        }
+    }
+
+    private void create_registrado_nasc(Registrado registrado) throws SQLException{
+        try (PreparedStatement statement = connection.prepareStatement(CREATE_REGISTRADO_NASC)) {
+            statement.setInt(1, registrado.getNascimento().getRegistro().getId_registro());
+            statement.setString(2, registrado.getNascimento().getRegistro().getTipo_registro());
+            statement.setInt(3, registrado.getNascimento().getRegistro().getAno_registro());
             statement.setInt(4, registrado.getCod_municipio_nasc());
             statement.setInt(5, registrado.getCod_raca_cor());
             statement.setDate(6, registrado.getData_nascimento());
@@ -192,13 +212,113 @@ public class PgRegistradoDAO implements RegistradoDAO {
         create_registro(registrado.getObito().getRegistro());
         if(registrado.getObito() != null){
             create_obito(registrado.getObito());
+            create_registrado_obt(registrado);
         }
         else{
             create_nascimento(registrado.getNascimento());
+            create_registrado_nasc(registrado);
         }
-        create_registrado(registrado);
+
     }
 
+
+    private Registrado read_obito_old(Integer id_registrado) throws SQLException{
+        Registrado registrado = new Registrado();
+
+        try (PreparedStatement statement = connection.prepareStatement(READ_QUERY_OBT)) {
+            statement.setInt(1, id_registrado);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    // Creating Obito
+                    if(registrado.getObito() == null){
+                        Obito obito = new Obito();
+                        registrado.setObito(obito);
+                    }
+                    // Creating Registro
+                    if(registrado.getObito().getRegistro() == null){
+                        Registro registro = new Registro();
+                        registrado.getObito().setRegistro(registro);
+                    }
+                    // Setting attributes Registro
+                    registrado.getObito().getRegistro().setId_registro(result.getInt("id_registro_obt"));
+                    registrado.getObito().getRegistro().setTipo_registro(result.getString("tipo_registro_obt"));
+                    registrado.getObito().getRegistro().setAno_registro(result.getInt("ano_registro_obt"));
+
+                    // Setting attributes Obito
+                    registrado.getObito().setData_obito(result.getDate("data_obito"));
+                    registrado.getObito().setCod_circ_obito(result.getInt("cod_circ_obito"));
+                    registrado.getObito().setHora_obito(result.getTime("hora_obito"));
+                    registrado.getObito().setCod_municipio_obito(result.getInt("cod_municipio_obito"));
+                    registrado.getObito().setCod_local_obito(result.getInt("cod_local_obito") );
+                    registrado.getObito().setCod_est_civ_falecido(result.getInt("cod_est_civ_falecido"));
+                    registrado.getObito().setIdade_falecido(result.getInt("idade_falecido"));
+                    registrado.getObito().setCod_tipo_obito(result.getInt("cod_tipo_obito"));
+
+                    // Setting attributes Registrado
+                    registrado.setId_registrado(id_registrado);
+                    registrado.setCod_municipio_nasc(result.getInt("cod_municipio_nasc"));
+                    registrado.setCod_sexo(result.getInt("cod_sexo"));
+                    registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
+                    registrado.setData_nascimento(result.getDate("data_nascimento"));
+                } else {
+                    throw new SQLException("Erro ao visualizar: registrado não encontrado.");
+                }
+            }
+        } catch (SQLException error) {
+            logger.error("read catch: " + error);
+        }
+
+        return registrado;
+    }
+
+    private Registrado read_nascimento_old(Integer id_registrado) throws SQLException{
+        Registrado registrado = new Registrado();
+
+        try (PreparedStatement statement = connection.prepareStatement(READ_QUERY_NASC)) {
+            statement.setInt(1, id_registrado);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    // Creating Nascimento
+                    if(registrado.getNascimento() == null){
+                        Nascimento nascimento = new Nascimento();
+                        registrado.setNascimento(nascimento);
+                    }
+                    // Creating Registro
+                    if(registrado.getNascimento().getRegistro() == null){
+                        Registro registro = new Registro();
+                        registrado.getNascimento().setRegistro(registro);
+                    }
+                    // Setting attributes Registro
+                    registrado.getNascimento().getRegistro().setId_registro(result.getInt("id_registro_nasc"));
+                    registrado.getNascimento().getRegistro().setTipo_registro(result.getString("tipo_registro_nasc"));
+                    registrado.getNascimento().getRegistro().setAno_registro(result.getInt("ano_registro_nasc"));
+
+                    // Setting attributes Nascimento
+                    registrado.getNascimento().setHora_nascimento(result.getTime("hora_nascimento"));
+                    registrado.getNascimento().setCod_tipo_parto(result.getInt("cod_tipo_parto"));
+                    registrado.getNascimento().setCod_raca_cor_mae(result.getInt("cod_raca_cor_mae"));
+                    registrado.getNascimento().setIdade_mae(result.getInt("idade_mae"));
+                    registrado.getNascimento().setCod_estado_civil_mae(result.getInt("cod_estado_civil_mae"));
+                    registrado.getNascimento().setPeso_nascido_vivo(result.getInt("peso_nascido_vivo"));
+
+                    // Setting attributes Registrado
+                    registrado.setId_registrado(id_registrado);
+                    registrado.setCod_municipio_nasc(result.getInt("cod_municipio_nasc"));
+                    registrado.setCod_sexo(result.getInt("cod_sexo"));
+                    registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
+                    registrado.setData_nascimento(result.getDate("data_nascimento"));
+                } else {
+                    throw new SQLException("Erro ao visualizar: registrado não encontrado em PgNascimentoDAO.");
+                }
+            }
+        } catch (SQLException error) {
+            logger.error("read catch: " + error);
+        }
+
+        return registrado;
+    }
 
     private Registrado read_obito(Integer id_registrado) throws SQLException{
         Registrado registrado = new Registrado();
@@ -252,7 +372,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
     private Registrado read_nascimento(Integer id_registrado) throws SQLException{
         Registrado registrado = new Registrado();
-
+        
         try (PreparedStatement statement = connection.prepareStatement(READ_QUERY_NASC)) {
             statement.setInt(1, id_registrado);
 
@@ -298,20 +418,36 @@ public class PgRegistradoDAO implements RegistradoDAO {
         return registrado;
     }
 
+    private Registrado read_(Integer id_registrado) throws SQLException{
+        Registrado registrado = null;
+
+        try (PreparedStatement statement = connection.prepareStatement(READ_QUERY)) {
+            statement.setInt(1, id_registrado);
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    // Mortality
+                    if(result.getInt("tipo_registro") == 1){
+                        registrado = read_obito(id_registrado);
+                    }
+                    // Natality
+                    else{
+                        registrado = read_nascimento(id_registrado);
+                    }
+                } else {
+                    throw new SQLException("Erro ao visualizar: registrado não encontrado.");
+                }
+            }
+        } catch (SQLException error) {
+            logger.error("read catch: " + error);
+        }
+
+        return registrado;
+    }
     // TODO não sei se tá certo fazer assim
     @Override
     public Registrado read(Integer id_registrado) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(READ_QUERY_OBT)) {
-            statement.setInt(1, id_registrado);
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
-                    return read_obito(id_registrado);
-                }
-                else{
-                    return read_nascimento(id_registrado);
-                }
-            }
-        }
+        return read_(id_registrado);
     }
 
     private void update_obito(Obito obito) throws SQLException{
@@ -455,8 +591,8 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
-
-    public List<Registrado> all_nascimento() throws SQLException {
+    @Override
+    public List<Registrado> all_nascimento() {
         List<Registrado> registradoList = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_NASC);
@@ -472,13 +608,13 @@ public class PgRegistradoDAO implements RegistradoDAO {
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            throw new SQLException("Error listing registrados.");
         }
 
         return registradoList;
     }
 
-    public List<Registrado> all_obito() throws SQLException {
+    @Override
+    public List<Registrado> all_obito() {
         List<Registrado> registradoList = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_OBT);
@@ -494,7 +630,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            throw new SQLException("Error listing registrados.");
         }
 
         return registradoList;
@@ -503,8 +638,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
     // TODO PROBLEM: O QUE RETORNO?
     @Override
     public List<Registrado> all() throws SQLException {
-        all_obito();
-        all_nascimento();
         return null;
     }
 
