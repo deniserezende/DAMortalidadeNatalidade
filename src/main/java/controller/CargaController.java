@@ -142,11 +142,13 @@ public class CargaController extends HttpServlet{
                                     carga.setNome_arquivo(fieldValue);
                                     break;
                                 case "tipo_carga":
-                                    if(fieldValue == "Registros de Mortalidade"){
+                                    if(fieldValue == "Natalidade"){
                                         carga.setTipo_carga(1);
+                                        logger.error("Entrei 1: fieldValue=" + fieldValue);
                                     }
                                     else{
                                         carga.setTipo_carga(2);
+                                        logger.error("Entrei 2: fieldValue=" + fieldValue);
                                     }
                                     break;
                                 case "responsavel":
@@ -255,7 +257,7 @@ public class CargaController extends HttpServlet{
                         daoCarga.create(carga);
                     }
 
-                    response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp"); // TODO verificar isso
+                    response.sendRedirect(request.getContextPath() + "/historico");
 
                 } catch (ParseException error) {
                     logger.error("ParseException catch: " + error);
