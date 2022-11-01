@@ -285,8 +285,14 @@ public class PgObitoDAO implements RegistradoDAO {
         return registradoList;
     }
 
+    // TODO delete this file
     @Override
-    public RegistradoDAO getRegistradoDAO() {
+    public List<Registrado> all_obito() {
+        return null;
+    }
+
+    @Override
+    public List<Registrado> all_nascimento() {
         return null;
     }
 }
