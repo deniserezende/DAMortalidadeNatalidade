@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.sql.Time;
 
 public class Obito {
     private Registro registro = null;
@@ -11,7 +12,7 @@ public class Obito {
     private Integer cod_local_obito; // FOREIGN KEY
     private Integer idade_falecido;
     private Date data_obito;
-    private Integer hora_obito;
+    private Time hora_obito;
 
     public Registro getRegistro() {
         return registro;
@@ -77,11 +78,11 @@ public class Obito {
         this.data_obito = data_obito;
     }
 
-    public Integer getHora_obito() {
+    public Time getHora_obito() {
         return hora_obito;
     }
 
-    public void setHora_obito(Integer hora_obito) {
+    public void setHora_obito(Time hora_obito) {
         this.hora_obito = hora_obito;
     }
 }

@@ -18,7 +18,8 @@ public class PgCargaDAO implements CargaDAO {
     private static final String CREATE_QUERY =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"CARGA\"(data_carga, hora_carga, responsavel, email, " +
                     "nome_arquivo, tipo_carga) " +
-                    "VALUES(to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?);";
+                    "VALUES(?, ?, ?, ?, ?, ?);";
+//    "VALUES(to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"CARGA\"" +
@@ -48,7 +49,6 @@ public class PgCargaDAO implements CargaDAO {
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -74,7 +74,6 @@ public class PgCargaDAO implements CargaDAO {
             }
         } catch (SQLException error) {
             logger.error("read catch: " + error);
-            logger.error(error.getMessage());
         }
 
         return carga;
@@ -97,7 +96,6 @@ public class PgCargaDAO implements CargaDAO {
             }
         } catch (SQLException error) {
             logger.error("delete catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -119,7 +117,6 @@ public class PgCargaDAO implements CargaDAO {
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            logger.error(error.getMessage());
             throw new SQLException("Error listing cargas.");
         }
 

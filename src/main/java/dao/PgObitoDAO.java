@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // TODO not tested
-public class PgObitoDAO implements ObitoDAO{
+public class PgObitoDAO implements RegistradoDAO {
 
     private final Connection connection;
     protected static final Logger logger = LogManager.getLogger(PgObitoDAO.class);
@@ -28,6 +28,8 @@ public class PgObitoDAO implements ObitoDAO{
                     "idade_falecido, cod_est_civ_falecido, cod_local_obito, cod_municipio_obito, cod_circ_obito, " +
                     "id_registro, tipo_registro, ano_registro) " +
                     "VALUES(?, to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+    // TODO verificar se preciso mesmo desse to_date()
     private static final String CREATE_REGISTRADO =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt" +
                     "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
@@ -52,7 +54,7 @@ public class PgObitoDAO implements ObitoDAO{
     private static final String UPDATE_REGISTRADO =
             "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
                     "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ?, " +
-                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro = ?;";
+                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
 
     private static final String DELETE_QUERY =
             "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
@@ -68,7 +70,7 @@ public class PgObitoDAO implements ObitoDAO{
             "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = " +
             "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n" +
             "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
-            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt;" +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt" +
             "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
             "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n ";
 
@@ -86,7 +88,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_registro catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -94,7 +95,7 @@ public class PgObitoDAO implements ObitoDAO{
         try (PreparedStatement statement = connection.prepareStatement(CREATE_OBITO)) {
             statement.setInt(1, obito.getCod_tipo_obito());
             statement.setDate(2, obito.getData_obito());
-            statement.setInt(3, obito.getHora_obito());
+            statement.setTime(3, obito.getHora_obito());
             statement.setInt(4, obito.getIdade_falecido());
             statement.setInt(5, obito.getCod_est_civ_falecido());
             statement.setInt(6, obito.getCod_local_obito());
@@ -107,7 +108,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_obito catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -124,7 +124,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("create_registrado catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -158,11 +157,12 @@ public class PgObitoDAO implements ObitoDAO{
                     // Setting attributes Registro
                     registrado.getObito().getRegistro().setId_registro(result.getInt("id_registro_obt"));
                     registrado.getObito().getRegistro().setTipo_registro(result.getString("tipo_registro_obt"));
+                    registrado.getObito().getRegistro().setAno_registro(result.getInt("ano_registro_obt"));
 
                     // Setting attributes Obito
                     registrado.getObito().setData_obito(result.getDate("data_obito"));
                     registrado.getObito().setCod_circ_obito(result.getInt("cod_circ_obito"));
-                    registrado.getObito().setHora_obito(result.getInt("hora_obito"));
+                    registrado.getObito().setHora_obito(result.getTime("hora_obito"));
                     registrado.getObito().setCod_municipio_obito(result.getInt("cod_municipio_obito"));
                     registrado.getObito().setCod_local_obito(result.getInt("cod_local_obito") );
                     registrado.getObito().setCod_est_civ_falecido(result.getInt("cod_est_civ_falecido"));
@@ -181,7 +181,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("read catch: " + error);
-            logger.error(error.getMessage());
         }
 
         return registrado;
@@ -203,7 +202,7 @@ public class PgObitoDAO implements ObitoDAO{
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_OBITO)) {
             statement.setInt(1, obito.getCod_tipo_obito());
             statement.setDate(2, obito.getData_obito());
-            statement.setInt(3, obito.getHora_obito());
+            statement.setTime(3, obito.getHora_obito());
             statement.setInt(4, obito.getIdade_falecido());
             statement.setInt(5, obito.getCod_est_civ_falecido());
             statement.setInt(6, obito.getCod_local_obito());
@@ -234,7 +233,6 @@ public class PgObitoDAO implements ObitoDAO{
             statement.executeUpdate();
         } catch (SQLException error) {
             logger.error("update_registrado catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -261,7 +259,6 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("delete catch: " + error);
-            logger.error(error.getMessage());
         }
     }
 
@@ -282,10 +279,20 @@ public class PgObitoDAO implements ObitoDAO{
             }
         } catch (SQLException error) {
             logger.error("all catch: " + error);
-            logger.error(error.getMessage());
             throw new SQLException("Error listing registrados.");
         }
 
         return registradoList;
+    }
+
+    // TODO delete this file
+    @Override
+    public List<Registrado> all_obito() {
+        return null;
+    }
+
+    @Override
+    public List<Registrado> all_nascimento() {
+        return null;
     }
 }
