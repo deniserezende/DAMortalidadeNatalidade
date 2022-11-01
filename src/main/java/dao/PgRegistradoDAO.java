@@ -640,9 +640,4 @@ public class PgRegistradoDAO implements RegistradoDAO {
     public List<Registrado> all() throws SQLException {
         return null;
     }
-
-    @Override
-    public RegistradoDAO getRegistradoDAO() {
-        return null;
-    }
 }
