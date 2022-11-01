@@ -12,7 +12,13 @@ public class PgDAOFactory extends DAOFactory {
     public CargaDAO getCargaDAO() {
         return new PgCargaDAO(this.connection);
     }
-    
+
+    @Override
+    // TODO e o nasciemnto???
+    public RegistradoDAO getRegistradoDAO() {
+        return new PgObitoDAO(this.connection);
+    }
+
     // TODO why do I have to implement this:
     @Override
     public void close() throws Exception {
