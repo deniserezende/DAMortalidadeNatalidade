@@ -16,7 +16,8 @@ public class PgDAOFactory extends DAOFactory {
     @Override
     // TODO e o nasciemnto???
     public RegistradoDAO getRegistradoDAO() {
-        return new PgObitoDAO(this.connection);
+        return new PgRegistradoDAO(this.connection);
+//        return new PgObitoDAO(this.connection);
     }
 
     // TODO why do I have to implement this:

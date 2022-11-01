@@ -285,10 +285,6 @@ public class PgObitoDAO implements RegistradoDAO {
         return registradoList;
     }
 
-    @Override
-    public RegistradoDAO getRegistradoDAO() {
-        return null;
-    }
     // TODO delete this file
     @Override
     public List<Registrado> all_obito() {
