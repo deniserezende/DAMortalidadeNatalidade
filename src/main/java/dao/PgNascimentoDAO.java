@@ -279,4 +279,15 @@ public class PgNascimentoDAO implements RegistradoDAO {
     public RegistradoDAO getRegistradoDAO() {
         return null;
     }
+
+    // TODO delete this file
+    @Override
+    public List<Registrado> all_obito() {
+        return null;
+    }
+
+    @Override
+    public List<Registrado> all_nascimento() {
+        return null;
+    }
 }
