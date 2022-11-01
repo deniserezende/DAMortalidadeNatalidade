@@ -85,4 +85,6 @@ public abstract class DAOFactory implements AutoCloseable{
     }
 
     public abstract CargaDAO getCargaDAO();
+    public abstract RegistradoDAO getRegistradoDAO();
+
 }
