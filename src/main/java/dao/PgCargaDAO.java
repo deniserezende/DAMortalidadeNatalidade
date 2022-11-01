@@ -18,7 +18,8 @@ public class PgCargaDAO implements CargaDAO {
     private static final String CREATE_QUERY =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"CARGA\"(data_carga, hora_carga, responsavel, email, " +
                     "nome_arquivo, tipo_carga) " +
-                    "VALUES(to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?);";
+                    "VALUES(?, ?, ?, ?, ?, ?);";
+//    "VALUES(to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"CARGA\"" +

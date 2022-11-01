@@ -14,7 +14,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class PgNascimentoDAO implements NascimentoDAO{
+public class PgNascimentoDAO implements RegistradoDAO {
 
     private final Connection connection;
     protected static final Logger logger = LogManager.getLogger(PgNascimentoDAO.class);
@@ -273,5 +273,16 @@ public class PgNascimentoDAO implements NascimentoDAO{
         }
 
         return registradoList;
+    }
+
+    // TODO delete this file
+    @Override
+    public List<Registrado> all_obito() {
+        return null;
+    }
+
+    @Override
+    public List<Registrado> all_nascimento() {
+        return null;
     }
 }
