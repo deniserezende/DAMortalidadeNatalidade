@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RegistradoDAO extends DAO<Registrado> {
 
-    public abstract RegistradoDAO getRegistradoDAO();
+//    public abstract RegistradoDAO getRegistradoDAO();
 
     public abstract List<Registrado> all_obito();
     public abstract List<Registrado> all_nascimento();
