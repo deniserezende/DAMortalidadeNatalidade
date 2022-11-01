@@ -348,6 +348,39 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
+    private void update_nascimento(Nascimento nascimento) throws SQLException{
+        // TODO deletar isso depois se não for útil
+        // poderia fazer aqui ele escolher qual query usar, se eu tivesse múltiplos
+//        String query;
+//
+//        if(obito.getCod_tipo_obito() == null)
+//
+//        if ((user.getSenha() == null) || (user.getSenha().isBlank())) {
+//            if ((user.getAvatar() == null) || (user.getAvatar().isBlank()))
+//                query = UPDATE_QUERY;
+//            else
+//                query = UPDATE_WITH_AVATAR_QUERY;
+
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_NASCIMENTO)) {
+            statement.setTime(1, nascimento.getHora_nascimento());
+            statement.setInt(2, nascimento.getCod_tipo_parto());
+            statement.setInt(3, nascimento.getCod_raca_cor_mae());
+            statement.setInt(4, nascimento.getIdade_mae());
+            statement.setInt(5, nascimento.getCod_estado_civil_mae());
+            statement.setInt(6, nascimento.getPeso_nascido_vivo());
+
+            statement.setInt(7, nascimento.getRegistro().getId_registro());
+            statement.setString(8, nascimento.getRegistro().getTipo_registro());
+            statement.setInt(9, nascimento.getRegistro().getAno_registro());
+
+            if (statement.executeUpdate() < 1) {
+                throw new SQLException("Error to update: nascimento registrado não encontrado em PgNascimentoDAO.");
+            }
+        } catch (SQLException error) {
+            logger.error("update_nascimento catch in PgNascimentoDAO: " + error);
+        }
+    }
+
     private void update_registrado(Registrado registrado) throws SQLException{
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_REGISTRADO)) {
             statement.setInt(1, registrado.getCod_municipio_nasc());
@@ -366,15 +399,36 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
     @Override
     public void update(Registrado registrado) throws SQLException {
-        update_obito(registrado.getObito());
+        if(registrado.getObito() != null){
+            update_obito(registrado.getObito());
+        }
+        else{
+            update_nascimento(registrado.getNascimento());
+        }
         update_registrado(registrado);
     }
 
-    @Override
-    public void delete(Integer id_registrado) throws SQLException {
-        Registrado registrado = read(id_registrado);
+    public void delete_nascimento(Registrado registrado) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_NASC)) {
+            statement.setInt(1, registrado.getId_registrado());
+            statement.setInt(2, registrado.getNascimento().getRegistro().getId_registro());
+            statement.setString(3, registrado.getNascimento().getRegistro().getTipo_registro());
+            statement.setInt(4, registrado.getNascimento().getRegistro().getAno_registro());
+            statement.setInt(5, registrado.getNascimento().getRegistro().getId_registro());
+            statement.setString(6, registrado.getNascimento().getRegistro().getTipo_registro());
+            statement.setInt(7, registrado.getNascimento().getRegistro().getAno_registro());
+
+            if (statement.executeUpdate() < 1) {
+                throw new SQLException("Error to delete: nascimento registrado não encontrado em PgNascimentoDAO.");
+            }
+        } catch (SQLException error) {
+            logger.error("delete catch: " + error);
+        }
+    }
+
+    public void delete_obito(Registrado registrado) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_OBT)) {
-            statement.setInt(1, id_registrado);
+            statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getObito().getRegistro().getId_registro());
             statement.setString(3, registrado.getObito().getRegistro().getTipo_registro());
             statement.setInt(4, registrado.getObito().getRegistro().getAno_registro());
@@ -391,7 +445,40 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public List<Registrado> all() throws SQLException {
+    public void delete(Integer id_registrado) throws SQLException {
+        Registrado registrado = read(id_registrado);
+        if(registrado.getObito() != null){
+            delete_obito(registrado);
+        }
+        else{
+            delete_nascimento(registrado);
+        }
+    }
+
+
+    public List<Registrado> all_nascimento() throws SQLException {
+        List<Registrado> registradoList = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_NASC);
+             ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                Registrado registrado = new Registrado();
+                // TODO colocar outras infos que vou querer nessa lista
+                registrado.getNascimento().getRegistro().setId_registro(result.getInt("id_registro"));
+                registrado.getNascimento().getRegistro().setTipo_registro(result.getString("tipo_registro"));
+                registrado.getNascimento().getRegistro().setAno_registro(result.getInt("ano_registro"));
+
+                registradoList.add(registrado);
+            }
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+            throw new SQLException("Error listing registrados.");
+        }
+
+        return registradoList;
+    }
+
+    public List<Registrado> all_obito() throws SQLException {
         List<Registrado> registradoList = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_OBT);
@@ -411,6 +498,14 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
 
         return registradoList;
+    }
+
+    // TODO PROBLEM: O QUE RETORNO?
+    @Override
+    public List<Registrado> all() throws SQLException {
+        all_obito();
+        all_nascimento();
+        return null;
     }
 
     @Override
