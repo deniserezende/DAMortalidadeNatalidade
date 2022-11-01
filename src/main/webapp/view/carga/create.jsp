@@ -38,10 +38,10 @@
                 </div>
 
                 <div>
-                    <input type="radio" id="mortalidade" name="tipo_carga" value="Registros de Mortalidade">
-                    <label for="mortalidade">Registros de Mortalidade</label><br>
-                    <input type="radio" id="natalidade" name="tipo_carga" value="Registros de Natalidade">
-                    <label for="natalidade">Registros de Natalidade</label><br>
+                    <input type="radio" id="Mortalidade" name="tipo_carga" value="Mortalidade">
+                    <label for="Mortalidade">Registros de Mortalidade</label><br>
+                    <input type="radio" id="Natalidade" name="tipo_carga" value="Natalidade">
+                    <label for="Natalidade">Registros de Natalidade</label><br>
                 </div>
 
                 <div class="form-group">
