@@ -40,7 +40,7 @@ import static sun.font.CreatedFontTracker.MAX_FILE_SIZE;
 @WebServlet(name = "CargaController",
             urlPatterns = {
                     "",
-                    "/carga/create",
+                    "/cargacreate",
                     "/historico" //é o /user do projeto do professor
             }
 )
@@ -77,7 +77,7 @@ public class CargaController extends HttpServlet{
                 dispatcher.forward(request, response);
                 break;
             }
-            case "/carga/create": {
+            case "/cargacreate": {
                 dispatcher = request.getRequestDispatcher("/view/carga/create.jsp");
                 dispatcher.forward(request, response);
                 break;
@@ -96,7 +96,7 @@ public class CargaController extends HttpServlet{
         String servletPath = request.getServletPath();
 
         switch (request.getServletPath()) {
-            case "/carga/create": {
+            case "/cargacreate": {
                 // Create a factory for disk-based file items
                 DiskFileItemFactory factory = new DiskFileItemFactory();
 
@@ -213,11 +213,11 @@ public class CargaController extends HttpServlet{
 
                     daoCarga = daoFactory.getCargaDAO();
 
-                    if (servletPath.equals("/carga/create")) {
+                    if (servletPath.equals("/cargacreate")) {
                         daoCarga.create(carga);
                     }
 
-                    response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp"); // TODO verificar isso
+                    response.sendRedirect(request.getContextPath() + "/historico"); // TODO verificar isso
 
                 } catch (ParseException error) {
                     logger.error("ParseException catch: " + error);
