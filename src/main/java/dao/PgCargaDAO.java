@@ -27,7 +27,7 @@ public class PgCargaDAO implements CargaDAO {
 
     private static final String DELETE_QUERY =
             "DELETE FROM \"DAMortalidade_Natalidade\".\"CARGA\" +\n" +
-                    "WHERE id_carga = ?;\n";
+            "WHERE id_carga = ?;\n";
 
 
     private static final String ALL_QUERY =
@@ -119,7 +119,6 @@ public class PgCargaDAO implements CargaDAO {
             logger.error("all catch: " + error);
             throw new SQLException("Error listing cargas.");
         }
-
         return cargaList;
     }
 }
