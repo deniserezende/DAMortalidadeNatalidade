@@ -79,7 +79,6 @@ public class CargaController extends HttpServlet{
             }
             case "/cargacreate": {
                 dispatcher = request.getRequestDispatcher("/view/carga/create.jsp");
-
                 dispatcher.forward(request, response);
                 break;
             }
@@ -218,7 +217,7 @@ public class CargaController extends HttpServlet{
                         daoCarga.create(carga);
                     }
 
-                    response.sendRedirect(request.getContextPath() + "/historico");
+                    response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp"); // TODO verificar isso
 
                 } catch (ParseException error) {
                     logger.error("ParseException catch: " + error);
@@ -297,7 +296,7 @@ public class CargaController extends HttpServlet{
             try{
                 daoRegistrado.create(registrado);
             }catch (Exception error){
-                logger.error("Tried to create registrado: " + error);
+                logger.error("ReadCSVMortality: Tried to create registrado: " + error);
             }
         }
 
@@ -464,6 +463,7 @@ public class CargaController extends HttpServlet{
                 else{
                     // If is a natality attribute then insert
                     if (column_natality.contains(first_line.get(j))) {
+                        logger.info("Inserting attribute " + first_line.get(j) + " in object");
                         insertInObjectNatality(registro, nascimento, registrado, next_line, j, first_line.get(j));
                     }
                 }
@@ -473,7 +473,7 @@ public class CargaController extends HttpServlet{
             try{
                 daoRegistrado.create(registrado);
             }catch (Exception error){
-                logger.error("Tried to create registrado: " + error);
+                logger.error("ReadCSVNatality: Tried to create registrado: " + error);
             }
         }
 
@@ -505,6 +505,7 @@ public class CargaController extends HttpServlet{
                 date_temp = LocalDate.parse(dateInString, formatter);
                 // Inserting in Registrado
                 registrado.setData_nascimento(Date.valueOf(date_temp));
+                registro.setAno_registro(date_temp.getYear());
                 break;
 
             case "\"SEXO\"":
@@ -564,3 +565,5 @@ public class CargaController extends HttpServlet{
     }
 
 }
+
+
