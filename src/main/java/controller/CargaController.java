@@ -137,10 +137,12 @@ public class CargaController extends HttpServlet{
                                     carga.setNome_arquivo(fieldValue);
                                     break;
                                 case "tipo_carga":
-                                    if(Objects.equals("Registros de Natalidade", fieldValue)){
+                                    if(Objects.equals("Registro de Natalidade", fieldValue)){
+                                        logger.error("Setting carga.setTipo_carga == 1");
                                         carga.setTipo_carga(1);
                                     }
-                                    else{ // if equals "Registros de Mortalidade"
+                                    else{ // if equals "Registro de Mortalidade"
+                                        logger.error("Setting carga.setTipo_carga == 2");
                                         carga.setTipo_carga(2);
                                     }
                                     break;
@@ -199,9 +201,11 @@ public class CargaController extends HttpServlet{
                         daoRegistrado = daoFactory.getRegistradoDAO();
                         List<String> lines = new ArrayList<>();
                         if(carga.getTipo_carga() == 1){ // Natality
+                            logger.error("Calling ReadCSVNatality");
                             ReadCSVNatality(reader, lines, daoRegistrado);
                         }
                         else{ // Mortality
+                            logger.error("Calling ReadCSVMortality");
                             ReadCSVMortality(reader, lines, daoRegistrado);
                         }
                     }
