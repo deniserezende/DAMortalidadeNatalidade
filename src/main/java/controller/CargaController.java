@@ -217,7 +217,7 @@ public class CargaController extends HttpServlet{
                         daoCarga.create(carga);
                     }
 
-                    response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp"); // TODO verificar isso
+                    response.sendRedirect(request.getContextPath() + "/historico");
 
                 } catch (ParseException error) {
                     logger.error("ParseException catch: " + error);
