@@ -584,5 +584,3 @@ public class CargaController extends HttpServlet{
     }
 
 }
-
-
