@@ -120,7 +120,6 @@ public class PgCargaDAO implements CargaDAO {
             logger.error("all catch: " + error);
             throw new SQLException("Error listing cargas.");
         }
-
         return cargaList;
     }
 }
