@@ -12,6 +12,7 @@ import model.*;
 
 import java.io.*;
 import java.sql.Date;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -167,8 +168,13 @@ public class CargaController extends HttpServlet{
                             carga.setData_carga(Date.valueOf(date_temp));
 
                             /* Inseting Time in Carga */
-                            // TODO insert hora
-//                            carga.setHora_carga();
+                            Calendar date = Calendar.getInstance();
+                            int hour = date.get(Calendar.HOUR_OF_DAY);
+                            int minute = date.get(Calendar.MINUTE);
+                            int second = date.get(Calendar.SECOND);
+                            String timeInString = hour + ":" + minute + ":" + second;
+                            carga.setHora_carga(Time.valueOf(timeInString));
+                            logger.info("Hora da carga: " + carga.getHora_carga());
 
                         }
                         else { // if item isn't type FormField
@@ -212,8 +218,6 @@ public class CargaController extends HttpServlet{
                     else{
                         logger.error("No file uploaded");
                     }
-
-
 
                     daoCarga = daoFactory.getCargaDAO();
 
@@ -340,8 +344,8 @@ public class CargaController extends HttpServlet{
 
             case "\"HORAOBITO\"":
             case "hora_obito":
+                logger.error("Inserting hora_obito: " + next_line.get(index));
                 String timeInString = next_line.get(index);
-                logger.error("Inserting hora_obito: " + timeInString);
                 if(timeInString.length() == 3){
                     char temp = '0';
                     timeInString = temp + timeInString;
@@ -352,8 +356,8 @@ public class CargaController extends HttpServlet{
                 int minutes = timeInteger % 100;
 
                 String timeValue = String.format("%02d:%02d", hours, minutes);
-                //TODO arrumar para conseguir inserir time
-//                obito.setHora_obito(Time.valueOf(timeValue));
+                logger.error("Inserting hora_obito formatada pela Denise: " + timeValue);
+                obito.setHora_obito(Time.valueOf(timeValue + ":00"));
                 break;
 
             case "\"CODMUNNATU\"":
@@ -547,9 +551,20 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "hora_nascimento":
-                logger.info("Inserting hora_nascimento");
-                // TODO também precisa fazer o negocio do time
-//                nascimento.setHora_nascimento(Integer.valueOf(next_line.get(index)));
+                logger.error("Inserting hora_nascimento: " + next_line.get(index));
+                String timeInString = next_line.get(index);
+                if(timeInString.length() == 3){
+                    char temp = '0';
+                    timeInString = temp + timeInString;
+                }
+                Integer timeInteger = Integer.valueOf(timeInString);
+
+                int hours = timeInteger / 100;
+                int minutes = timeInteger % 100;
+
+                String timeValue = String.format("%02d:%02d", hours, minutes);
+                logger.error("Inserting hora_nascimento formatada pela Denise: " + timeValue);
+                nascimento.setHora_nascimento(Time.valueOf(timeValue + ":00"));
                 break;
 
             case "peso_nascido_vivo":
