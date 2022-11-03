@@ -87,7 +87,7 @@
                 </p>
                 <h3>3) Códigos dos municípios IBGE</h3>
                 <p>
-                    Descrição
+                    A Tabela de Códigos de Municípios do IBGE apresenta a lista dos municípios brasileiros associados a um código composto de 7 dígitos, sendo os dois primeiros referentes ao código da Unidade da Federação.
                 </p>
             </div>
         </div>
