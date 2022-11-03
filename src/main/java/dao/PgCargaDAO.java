@@ -80,10 +80,8 @@ public class PgCargaDAO implements CargaDAO {
         return carga;
     }
 
-    // TODO ver se realmente o update não fará nada
     @Override
     public void update(Carga carga) throws SQLException {
-
     }
 
     @Override
