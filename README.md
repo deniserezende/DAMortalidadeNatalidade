@@ -11,3 +11,7 @@ Deve-se implementar um esquema relacional de banco de dados que faça o armazena
 O sistema deve ter uma opção de upload de arquivos de dados para carga do banco de dados. Ao receber um arquivo, o sistema deverá processá-lo e fazer as inserções correspondentes no banco de dados, utilizando, necessariamente um ou mais controllers e os objetos das camadas de model e de acesso a dados. Também deve ser apresentada uma listagem das cargas, contendo o nome do conjunto de dados, a data e hora da carga de dados e o número de tuplas carregadas.
 
 O sistema também deve apresentar relatórios a respeito dos conjuntos de dados, utilizando gráficos, tabelas e informações relevantes. Espera-se que as consultas utilizadas para produzir os relatórios explorem diferentes recursos da linguagem SQL (junções internas e externas, agregações, agrupamentos, ranking, ordenações, subconsultas, filtros diversos, etc.). Os relatórios também fazendo uso de objetos da camada de acesso a dados, possivelmente, objetos específicos para a geração dos relatórios.
+
+# Regras de Negócio
+
+- Os campos de hora não possuem nenhum tipo de pontuação (exemplo: ":"). O dado "800" e é interpretado como "08:00" e "5" é interpretado como "00:05"
