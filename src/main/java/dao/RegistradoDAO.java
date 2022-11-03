@@ -12,8 +12,7 @@ public interface RegistradoDAO extends DAO<Registrado> {
     public abstract List<Registrado> all_obito();
     public abstract List<Registrado> all_nascimento();
 
+    public abstract Registrado read_nascimento(Integer id_registro, String tipo_registro, Integer ano_registro);
 
-
-//    public void authenticate(User usuario) throws SQLException, SecurityException;
-//    public User getByLogin(String login) throws SQLException;
+    public abstract Registrado read_obito(Integer id_registro, String tipo_registro, Integer ano_registro);
 }
