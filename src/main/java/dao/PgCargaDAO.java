@@ -32,6 +32,7 @@ public class PgCargaDAO implements CargaDAO {
 
     private static final String ALL_QUERY =
             "SELECT *\nFROM \"DAMortalidade_Natalidade\".\"CARGA\"";
+
     public PgCargaDAO(Connection connection) {
         this.connection = connection;
     }
