@@ -142,6 +142,8 @@ public class CargaController extends HttpServlet{
                                 case "email":
                                     carga.setEmail(fieldValue);
                                     break;
+                                case "titulo":
+                                    carga.setTitulo_carga(fieldValue);
                             }
                             /* Inserting Date in Carga */
                             String dateInString = new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime());
