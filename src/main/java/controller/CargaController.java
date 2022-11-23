@@ -206,6 +206,8 @@ public class CargaController extends HttpServlet{
                             logger.info("Calling ReadCSVMortality");
                             ReadCSVMortality(reader, lines, daoRegistrado);
                         }
+                        // Deleting temporary file
+                        uploadedFile.delete();
                     }
                     else{
                         logger.error("No file uploaded");
@@ -260,13 +262,24 @@ public class CargaController extends HttpServlet{
             lines.add(line);
         }
 
+        boolean isComma = false;
         // Creating a list of all the columns names
         List<String> first_line = Arrays.asList(lines.get(0).split("\\s*;\\s*"));
         logger.info(first_line);
-
+        // TODO verificar se posso fazer assim
+        if(first_line.size() < 2){
+            isComma = true;
+            first_line = Arrays.asList(lines.get(0).split("\\s*,\\s*"));
+        }
+        List<String> next_line;
         // Loop through the lines
         for(int i = 1; i < lines.size(); i++){
-            List<String> next_line = Arrays.asList(lines.get(i).split("\\s*;\\s*"));
+            if(isComma){
+                next_line = Arrays.asList(lines.get(i).split("\\s*,\\s*"));
+            }
+            else{
+                next_line = Arrays.asList(lines.get(i).split("\\s*;\\s*"));
+            }
             logger.info(next_line);
 
             //Create object for each new column
@@ -286,7 +299,7 @@ public class CargaController extends HttpServlet{
                 }
                 else{
                     // If is a mortality attribute then insert
-                    logger.info("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
+                    logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
                     insertInObjectMortality(registro, obito, registrado, next_line, j, first_line.get(j));
                 }
             }
@@ -329,7 +342,9 @@ public class CargaController extends HttpServlet{
         DateTimeFormatter formatter;
         LocalDate date_temp;
         String string;
-        switch (columnName) {
+        // Removing quotations marks
+        String columnNameWithoutQM = getStringWithoutQuotationMarks(columnName);
+        switch (columnNameWithoutQM) {
             case "CONTADOR":
             case "\"CONTADOR\"":
             case "id_registro":
@@ -352,7 +367,7 @@ public class CargaController extends HttpServlet{
             case "data_obito":
                 logger.info("Inserting data_obito");
                 dateInString = getStringWithoutQuotationMarks(next_line.get(index));
-                // Formatting Date
+                // Formatting Date: dMMyyyy
                 if (dateInString.length() == 7){
                     char temp = '0';
                     dateInString = temp + next_line.get(index);
@@ -507,7 +522,7 @@ public class CargaController extends HttpServlet{
                     logger.info("next == vazio");
                 }
                 else{
-                    logger.info("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
+                    logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
                     insertInObjectNatality(registro, nascimento, registrado, next_line, j, first_line.get(j));
                 }
             }
@@ -541,7 +556,9 @@ public class CargaController extends HttpServlet{
         DateTimeFormatter formatter;
         LocalDate date_temp;
         String string;
-        switch (columnName) {
+        // Removing quotations marks
+        String columnNameWithoutQM = getStringWithoutQuotationMarks(columnName);
+        switch (columnNameWithoutQM) {
             case "CODMUNNATU":
             case "\"CODMUNNATU\"":
             case "cod_municipio_nasc":
