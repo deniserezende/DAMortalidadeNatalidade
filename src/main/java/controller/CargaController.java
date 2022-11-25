@@ -471,10 +471,36 @@ public class CargaController extends HttpServlet{
 
             case "IDADE":
             case "idade_falecido":
-                //TODO tratar a idade do falecido
                 logger.info("Inserting idade_falecido");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
-                obito.setIdade_falecido(Integer.valueOf(string));
+
+                Character unidadeIdade = string.charAt(0);              //o primeiro subcampo indica a unidade da idade
+                if("12345".contains(unidadeIdade.toString())){          //1 = minuto, 2 = hora, 3 = mês, 4 = ano, 5 = idade maior que 100 anos
+                    String qtdIdade = string.substring(1);    //quantidade de unidades da idade
+
+                    switch (unidadeIdade){
+                        case '1':                   //subcampo varia de 01 e 59 (minutos)
+                        case '2':                   //subcampo varia de 01 a 23 (horas)
+                        case '3':                   //subcampo varia de 01 a 11 (meses)
+                            string = "0";
+                            obito.setIdade_falecido(Integer.valueOf(string));
+                            break;
+                        case '4':                   //subcampo varia de 00 a 99 (anos)
+                            string = qtdIdade;
+                            obito.setIdade_falecido(Integer.valueOf(string));
+                            break;
+                        case '5':                   //idade maior que 100 anos
+                            string = "1" + qtdIdade;
+                            obito.setIdade_falecido(Integer.valueOf(string));
+                            break;
+                        default:                    //valor inválido, a idade não será registrada
+                            break;
+                    }
+                }
+                else{
+                    logger.error("Idade Falecido inválida!");
+                }
+                //obito.setIdade_falecido(Integer.valueOf(string));
                 break;
 
             default:
