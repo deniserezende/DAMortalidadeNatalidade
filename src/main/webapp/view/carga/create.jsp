@@ -6,14 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html;charset=ISO-8859-1" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-
     <%@include file="/view/include/head.jsp" %>
     <title>[Mortalidade e Natalidade App] Nova carga</title>
 </head>
@@ -101,6 +100,12 @@
                 method="POST">
 
             <div class="form-group">
+                <label class="control-label" for="titulo">Descrição carga</label>
+                <input id="titulo" class="form-control" type="text" name="titulo" required autofocus/>
+                <p class="help-block"></p>
+            </div>
+
+            <div class="form-group">
                 <label class="control-label" for="responsavel">Responsavel</label>
                 <input id="responsavel" class="form-control" type="text" name="responsavel" required autofocus/>
                 <p class="help-block"></p>
@@ -125,6 +130,13 @@
                        class="form-control" id="arquivo"
                        name="arquivo"
                        accept=".csv"/>
+            </div>
+
+            <div>
+                <input type="radio" id="comma" name="separador_csv" value="comma">
+                <label for="comma">Vírgula (,) como separador do CSV</label><br>
+                <input type="radio" id="semicolon" name="separador_csv" value="semicolon">
+                <label for="semicolon">Ponto e vírgula (;) como separador do CSV</label><br>
             </div>
 
             <div class="text-center">

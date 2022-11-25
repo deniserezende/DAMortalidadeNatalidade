@@ -17,8 +17,8 @@ public class PgCargaDAO implements CargaDAO {
 
     private static final String CREATE_QUERY =
             "INSERT INTO \"DAMortalidade_Natalidade\".\"CARGA\"(data_carga, hora_carga, responsavel, email, " +
-                    "nome_arquivo, tipo_carga) " +
-                    "VALUES(?, ?, ?, ?, ?, ?);";
+                    "nome_arquivo, tipo_carga, titulo_carga) " +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?);";
 //    "VALUES(to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?);";
 
     private static final String READ_QUERY =
@@ -46,6 +46,7 @@ public class PgCargaDAO implements CargaDAO {
             statement.setString(4, carga.getEmail());
             statement.setString(5, carga.getNome_arquivo());
             statement.setInt(6, carga.getTipo_carga());
+            statement.setString(7, carga.getTitulo_carga());
 
             statement.executeUpdate();
         } catch (SQLException error) {
@@ -68,6 +69,7 @@ public class PgCargaDAO implements CargaDAO {
                     carga.setNome_arquivo(result.getString("nome_arquivo"));
                     carga.setEmail(result.getString("email"));
                     carga.setResponsavel(result.getString("resposavel"));
+                    carga.setTitulo_carga(result.getString("titulo_carga"));
 
                 } else {
                     throw new SQLException("Erro ao visualizar: carga não encontrada.");
@@ -112,6 +114,7 @@ public class PgCargaDAO implements CargaDAO {
                 carga.setTipo_carga(result.getInt("tipo_carga"));
                 carga.setResponsavel(result.getString("responsavel"));
                 carga.setEmail(result.getString("email"));
+                carga.setTitulo_carga(result.getString("titulo_carga"));
                 cargaList.add(carga);
             }
         } catch (SQLException error) {

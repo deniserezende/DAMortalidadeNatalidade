@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
         urlPatterns = {
                 "",
                 "/cargacreate",
-                "/historico", //é o /user do projeto do professor
+                "/historico",
                 "/relatoriosNatalidade",
                 "/relatoriosMortalidade",
                 "/relatoriosCrescimentoPopulacional"
@@ -160,6 +160,14 @@ public class CargaController extends HttpServlet{
                                 case "email":
                                     carga.setEmail(fieldValue);
                                     break;
+                                case "titulo":
+                                    carga.setTitulo_carga(fieldValue);
+                                    break;
+                                case "separador_csv":
+                                    // TODO tratar o separador do CSV aqui
+                                    //recebemos o separador do CSV aqui
+                                    logger.error("Separador de CSV informado: " + fieldValue);
+                                    break;
                             }
                             /* Inserting Date in Carga */
                             String dateInString = new SimpleDateFormat("ddMMyyyy").format(Calendar.getInstance().getTime());
@@ -222,6 +230,8 @@ public class CargaController extends HttpServlet{
                             logger.info("Calling ReadCSVMortality");
                             ReadCSVMortality(reader, lines, daoRegistrado);
                         }
+                        // Deleting temporary file
+                        uploadedFile.delete();
                     }
                     else{
                         logger.error("No file uploaded");
@@ -289,13 +299,24 @@ public class CargaController extends HttpServlet{
             lines.add(line);
         }
 
+        boolean isComma = false;
         // Creating a list of all the columns names
         List<String> first_line = Arrays.asList(lines.get(0).split("\\s*;\\s*"));
         logger.info(first_line);
-
+        // TODO verificar se posso fazer assim
+        if(first_line.size() < 2){
+            isComma = true;
+            first_line = Arrays.asList(lines.get(0).split("\\s*,\\s*"));
+        }
+        List<String> next_line;
         // Loop through the lines
         for(int i = 1; i < lines.size(); i++){
-            List<String> next_line = Arrays.asList(lines.get(i).split("\\s*;\\s*"));
+            if(isComma){
+                next_line = Arrays.asList(lines.get(i).split("\\s*,\\s*"));
+            }
+            else{
+                next_line = Arrays.asList(lines.get(i).split("\\s*;\\s*"));
+            }
             logger.info(next_line);
 
             //Create object for each new column
@@ -315,7 +336,7 @@ public class CargaController extends HttpServlet{
                 }
                 else{
                     // If is a mortality attribute then insert
-                    logger.info("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
+                    logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
                     insertInObjectMortality(registro, obito, registrado, next_line, j, first_line.get(j));
                 }
             }
@@ -358,9 +379,10 @@ public class CargaController extends HttpServlet{
         DateTimeFormatter formatter;
         LocalDate date_temp;
         String string;
-        switch (columnName) {
+        // Removing quotations marks
+        String columnNameWithoutQM = getStringWithoutQuotationMarks(columnName);
+        switch (columnNameWithoutQM) {
             case "CONTADOR":
-            case "\"CONTADOR\"":
             case "id_registro":
                 logger.info("Inserting id_registro");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -369,7 +391,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "TIPOBITO":
-            case "\"TIPOBITO\"":
             case "cod_tipo_obito":
                 logger.info("Inserting cod_tipo_obito");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -377,11 +398,10 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "DTOBITO":
-            case "\"DTOBITO\"":
             case "data_obito":
                 logger.info("Inserting data_obito");
                 dateInString = getStringWithoutQuotationMarks(next_line.get(index));
-                // Formatting Date
+                // Formatting Date: dMMyyyy
                 if (dateInString.length() == 7){
                     char temp = '0';
                     dateInString = temp + next_line.get(index);
@@ -397,7 +417,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "HORAOBITO":
-            case "\"HORAOBITO\"":
             case "hora_obito":
                 logger.info("Inserting hora_obito: " + next_line.get(index));
                 String timeInString = getStringWithoutQuotationMarks(next_line.get(index));
@@ -416,7 +435,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "CODMUNNATU":
-            case "\"CODMUNNATU\"":
             case "cod_municipio_nasc":
                 logger.info("Inserting cod_municipio_nasc");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -424,7 +442,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "DTNASC":
-            case "\"DTNASC\"":
             case "data_nascimento":
                 logger.info("Inserting data_nascimento");
                 dateInString = getStringWithoutQuotationMarks(next_line.get(index));
@@ -442,7 +459,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "SEXO":
-            case "\"SEXO\"":
             case "cod_sexo":
                 logger.info("Inserting cod_sexo");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -450,7 +466,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "RACACOR":
-            case "\"RACACOR\"":
             case "cod_raca_cor":
                 logger.info("Inserting cod_raca_cor");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -458,7 +473,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "ESTCIV":
-            case "\"ESTCIV\"":
             case "cod_estado_civil":
                 logger.info("Inserting cod_estado_civil");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -466,7 +480,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "LOCOCOR":
-            case "\"LOCOCOR\"":
             case "cod_local_obito":
                 logger.info("Inserting cod_local_obito");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -474,7 +487,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "CODMUNOCOR":
-            case "\"CODMUNOCOR\"":
             case "cod_municipio_obito":
                 logger.info("Inserting cod_municipio_obito");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -482,7 +494,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "CIRCOBITO":
-            case "\"CIRCOBITO\"":
             case "cod_circ_obito":
                 logger.info("Inserting cod_circ_obito");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -490,11 +501,37 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "IDADE":
-            case "\"IDADE\"":
             case "idade_falecido":
                 logger.info("Inserting idade_falecido");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
-                obito.setIdade_falecido(Integer.valueOf(string));
+
+                Character unidadeIdade = string.charAt(0);              //o primeiro subcampo indica a unidade da idade
+                if("12345".contains(unidadeIdade.toString())){          //1 = minuto, 2 = hora, 3 = mês, 4 = ano, 5 = idade maior que 100 anos
+                    String qtdIdade = string.substring(1);    //quantidade de unidades da idade
+
+                    switch (unidadeIdade){
+                        case '1':                   //subcampo varia de 01 e 59 (minutos)
+                        case '2':                   //subcampo varia de 01 a 23 (horas)
+                        case '3':                   //subcampo varia de 01 a 11 (meses)
+                            string = "0";
+                            obito.setIdade_falecido(Integer.valueOf(string));
+                            break;
+                        case '4':                   //subcampo varia de 00 a 99 (anos)
+                            string = qtdIdade;
+                            obito.setIdade_falecido(Integer.valueOf(string));
+                            break;
+                        case '5':                   //idade maior que 100 anos
+                            string = "1" + qtdIdade;
+                            obito.setIdade_falecido(Integer.valueOf(string));
+                            break;
+                        default:                    //valor inválido, a idade não será registrada
+                            break;
+                    }
+                }
+                else{
+                    logger.error("Idade Falecido inválida!");
+                }
+                //obito.setIdade_falecido(Integer.valueOf(string));
                 break;
 
             default:
@@ -536,7 +573,7 @@ public class CargaController extends HttpServlet{
                     logger.info("next == vazio");
                 }
                 else{
-                    logger.info("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
+                    logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
                     insertInObjectNatality(registro, nascimento, registrado, next_line, j, first_line.get(j));
                 }
             }
@@ -570,9 +607,11 @@ public class CargaController extends HttpServlet{
         DateTimeFormatter formatter;
         LocalDate date_temp;
         String string;
-        switch (columnName) {
+        // Removing quotations marks
+        String columnNameWithoutQM = getStringWithoutQuotationMarks(columnName);
+
+        switch (columnNameWithoutQM) {
             case "CODMUNNATU":
-            case "\"CODMUNNATU\"":
             case "cod_municipio_nasc":
                 logger.info("Inserting cod_municipio_nasc");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -580,7 +619,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "DTNASC":
-            case "\"DTNASC\"":
             case "data_nascimento":
                 logger.info("Inserting data_nascimento");
                 dateInString = getStringWithoutQuotationMarks(next_line.get(index));
@@ -598,7 +636,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "SEXO":
-            case "\"SEXO\"":
             case "cod_sexo":
                 logger.info("Inserting cod_sexo");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -606,7 +643,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "RACACOR":
-            case "\"RACACOR\"":
             case "cod_raca_cor":
                 logger.info("Inserting cod_raca_cor");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -614,7 +650,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "CONTADOR":
-            case "\"CONTADOR\"":
             case "id_registro":
                 logger.info("Inserting id_registro");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -623,7 +658,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "IDADEMAE":
-            case "\"IDADEMAE\"":
             case "idade_mae":
                 logger.info("Inserting idade_mae");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -631,7 +665,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "ESTCIVMAE":
-            case "\"ESTCIVMAE\"":
             case "cod_estado_civil_mae":
                 logger.info("Inserting cod_estado_civil_mae");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -639,7 +672,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "PARTO":
-            case "\"PARTO\"":
             case "cod_tipo_parto":
                 logger.info("Inserting cod_tipo_parto");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -647,7 +679,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "HORANASC":
-            case "\"HORANASC\"":
             case "hora_nascimento":
                 logger.info("Inserting hora_nascimento: " + next_line.get(index));
                 String timeInString = getStringWithoutQuotationMarks(next_line.get(index));
@@ -666,7 +697,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "PESO":
-            case "\"PESO\"":
             case "peso_nascido_vivo":
                 logger.info("Inserting peso_nascido_vivo");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
@@ -674,7 +704,6 @@ public class CargaController extends HttpServlet{
                 break;
 
             case "RACACORMAE":
-            case "\"RACACORMAE\"":
             case "cod_raca_cor_mae":
                 logger.info("Inserting cod_raca_cor_mae");
                 string = getStringWithoutQuotationMarks(next_line.get(index));
