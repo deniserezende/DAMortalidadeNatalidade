@@ -1,19 +1,17 @@
 <%--
   Created by IntelliJ IDEA.
   User: laura
-  Date: 19/10/2022
-  Time: 11:10
+  Date: 25/11/2022
+  Time: 14:11
   To change this template use File | Settings | File Templates.
 --%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
+
 <head>
     <%@include file="/view/include/head.jsp" %>
-    <title>[Mortalidade e Natalidade App] Historico de Cargas</title>
+    <title>[Mortalidade e Natalidade App] Relatórios de Natalidade</title>
 </head>
 <body>
 <div class="wrapper">
@@ -28,8 +26,8 @@
             <li>
                 <a href="${pageContext.servletContext.contextPath}/">Sobre</a>
             </li>
-            <li class="active">
-                <a href="#">Histórico de cargas</a>
+            <li>
+                <a href="${pageContext.servletContext.contextPath}/historico">Histórico de cargas</a>
             </li>
             <li>
                 <a href="${pageContext.servletContext.contextPath}/cargacreate">Nova carga</a>
@@ -37,8 +35,8 @@
             <li>
                 <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Relatórios</a>
                 <ul class="collapse list-unstyled" id="pageSubmenu">
-                    <li>
-                        <a href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Relatórios de Natalidade</a>
+                    <li class="active">
+                        <a href="#">Relatórios de Natalidade</a>
                     </li>
                     <li>
                         <a href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Relatórios de Mortalidade</a>
@@ -70,14 +68,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/">Sobre</a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Histórico</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/historico">Histórico</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/cargacreate">Carga</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Natalidade</a>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Natalidade</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Mortalidade</a>
@@ -90,60 +88,8 @@
             </div>
         </nav>
 
-        <h2 title="Historico">Histórico de cargas</h2>
+        <h2 title="RelatoriosNatalidade">Relatórios de Natalidade no Brasil</h2>
 
-        <form class="form_histoico_cargas" action="${pageContext.servletContext.contextPath}/historico" method="POST" style="font-size: 15px">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">Data</th>
-                    <th scope="col">Horário</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Responsável</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Nome arquivo</th>
-                    <th scope="col">Tipo de carga</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach var="carga" items="${requestScope.cargaList}">
-                    <tr>
-
-                        <td>
-                            <span class="h4"><c:out value="${carga.data_carga}"/></span>
-                        </td>
-                        <td>
-                            <span class="h4"><c:out value="${carga.hora_carga}"/></span>
-                        </td>
-                        <td>
-                            <span class="h4"><c:out value="${carga.titulo_carga}"/></span>
-                        </td>
-                        <td>
-                            <span class="h4"><c:out value="${carga.responsavel}"/></span>
-                        </td>
-                        <td>
-                            <span class="h4"><c:out value="${carga.email}"/></span>
-                        </td>
-                        <td>
-                            <span class="h4"><c:out value="${carga.nome_arquivo}"/></span>
-                        </td>
-                        <td>
-                        <span class="h4">
-                            <c:if test="${carga.tipo_carga == 1}">
-                                <c:out value="Natalidade"/>
-                            </c:if>
-                            <c:if test="${carga.tipo_carga == 2}">
-                                <c:out value="Mortalidade"/>
-                            </c:if>
-                        </span>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </form>
-
-    </div>
 </div>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
