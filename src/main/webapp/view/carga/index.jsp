@@ -69,12 +69,13 @@
 
         <h2 title="Historico">Histórico de cargas</h2>
 
-        <form class="form_histoico_cargas" action="${pageContext.servletContext.contextPath}/historico" method="POST">
+        <form class="form_histoico_cargas" action="${pageContext.servletContext.contextPath}/historico" method="POST" style="font-size: 15px">
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">Data</th>
                     <th scope="col">Horário</th>
+                    <th scope="col">Descrição</th>
                     <th scope="col">Responsável</th>
                     <th scope="col">Email</th>
                     <th scope="col">Nome arquivo</th>
@@ -90,6 +91,9 @@
                         </td>
                         <td>
                             <span class="h4"><c:out value="${carga.hora_carga}"/></span>
+                        </td>
+                        <td>
+                            <span class="h4"><c:out value="${carga.titulo_carga}"/></span>
                         </td>
                         <td>
                             <span class="h4"><c:out value="${carga.responsavel}"/></span>
