@@ -15,3 +15,4 @@ O sistema também deve apresentar relatórios a respeito dos conjuntos de dados,
 # Regras de Negócio
 
 - Os campos de hora não possuem nenhum tipo de pontuação (exemplo: ":"). O dado "800" e é interpretado como "08:00" e "5" é interpretado como "00:05"
+- O campo idade falecido foi tratado para anos. As idades em horas, dias e meses foram convertidas para 0 anos.
