@@ -34,6 +34,20 @@
             <li>
                 <a href="${pageContext.servletContext.contextPath}/cargacreate">Nova carga</a>
             </li>
+            <li>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Relatórios</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li>
+                        <a href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Relatórios de Natalidade</a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Relatórios de Mortalidade</a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.servletContext.contextPath}/relatoriosCrescimentoPopulacional">Relatórios de Crescimento Populacional</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </nav>
 
@@ -61,6 +75,15 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/cargacreate">Carga</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Natalidade</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Mortalidade</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosCrescimentoPopulacional">Crescimento Populacional</a>
                         </li>
                     </ul>
                 </div>

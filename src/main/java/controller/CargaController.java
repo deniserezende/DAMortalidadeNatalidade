@@ -32,7 +32,10 @@ import javax.servlet.http.HttpSession;
         urlPatterns = {
                 "",
                 "/cargacreate",
-                "/historico" //é o /user do projeto do professor
+                "/historico", //é o /user do projeto do professor
+                "/relatoriosNatalidade",
+                "/relatoriosMortalidade",
+                "/relatoriosCrescimentoPopulacional"
         }
 )
 
@@ -69,6 +72,21 @@ public class CargaController extends HttpServlet{
             }
             case "/cargacreate": {
                 dispatcher = request.getRequestDispatcher("/view/carga/create.jsp");
+                dispatcher.forward(request, response);
+                break;
+            }
+            case "/relatoriosNatalidade": {
+                dispatcher = request.getRequestDispatcher("/view/relatorios/natalidade.jsp");
+                dispatcher.forward(request, response);
+                break;
+            }
+            case "/relatoriosMortalidade": {
+                dispatcher = request.getRequestDispatcher("/view/relatorios/mortalidade.jsp");
+                dispatcher.forward(request, response);
+                break;
+            }
+            case "/relatoriosCrescimentoPopulacional": {
+                dispatcher = request.getRequestDispatcher("/view/relatorios/crescimentoPopulacional.jsp");
                 dispatcher.forward(request, response);
                 break;
             }
@@ -246,6 +264,19 @@ public class CargaController extends HttpServlet{
                     session.invalidate();
                 }
                 response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp");
+                break;
+            }
+            case "/relatoriosNatalidade": {
+                response.sendRedirect(request.getContextPath() + "/view/relatorios/natalidade.jsp");
+                break;
+            }
+            case "/relatoriosMortalidade": {
+                response.sendRedirect(request.getContextPath() + "/view/relatorios/mortalidade.jsp");
+                break;
+            }
+            case "/relatoriosCrescimentoPopulacional": {
+                response.sendRedirect(request.getContextPath() + "/view/relatorios/crescimentoPopulacional.jsp");
+                break;
             }
         }
     }
