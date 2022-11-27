@@ -89,7 +89,7 @@
         </nav>
 
         <h2 title="RelatoriosNatalidade">Relatórios de Natalidade no Brasil</h2>
-
+    </div>
 </div>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->

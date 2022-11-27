@@ -89,6 +89,7 @@
         </nav>
 
         <h2 title="RelatoriosCrescimentoPopulacional">Relatórios de Crescimento Populacional no Brasil</h2>
+    </div>
 </div>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->

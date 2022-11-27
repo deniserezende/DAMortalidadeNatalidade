@@ -89,6 +89,7 @@
         </nav>
 
         <h2 title="RelatoriosMortalidade">Relatórios de Mortalidade no Brasil</h2>
+    </div>
 </div>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
