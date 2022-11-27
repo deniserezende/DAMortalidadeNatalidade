@@ -108,6 +108,7 @@
         </nav>
 
         <h2 title="RelatoriosNatalidade">Relatórios de Natalidade no Brasil</h2>
+
         <script type="text/javascript">
             window.onload = function() {
                 var chartP = new CanvasJS.Chart("chartContainer1", {
