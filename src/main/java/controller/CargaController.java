@@ -50,6 +50,7 @@ public class CargaController extends HttpServlet{
         //HttpSession session;
         RequestDispatcher dispatcher;
         DAO<Carga> dao;
+        String servletPath = request.getServletPath();
 
         switch (request.getServletPath()) {
             case "": {
@@ -76,8 +77,18 @@ public class CargaController extends HttpServlet{
                 break;
             }
             case "/relatoriosNatalidade": {
-                dispatcher = request.getRequestDispatcher("/view/relatorios/natalidade.jsp");
-                dispatcher.forward(request, response);
+                try(DAOFactory daoFactory = DAOFactory.getInstance()){
+                    RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
+                    List<Registrado> listaNascimentos = registradoDao.all_nascimento();
+                    request.setAttribute("listaRegistradoNascimento", listaNascimentos);
+                    dispatcher = request.getRequestDispatcher("/view/relatorios/natalidade.jsp");
+                    dispatcher.forward(request, response);
+                }
+                catch(Exception error) {
+                    logger.error("ParseException catch: " + error);
+                    request.getSession().setAttribute("error", "Não foi possível carrehar os dados para plotar o gráfico");
+                    response.sendRedirect(request.getContextPath() + servletPath);
+                }
                 break;
             }
             case "/relatoriosMortalidade": {

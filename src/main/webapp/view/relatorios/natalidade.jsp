@@ -6,11 +6,30 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%
+    Gson gsonObj = new Gson();
+    Map<Object,Object> map = null;
+    List<Map<Object,Object>> listP = new ArrayList<Map<Object,Object>>();
+
+    List<Registrado> listaNatalidade = (List<Registrado>)request.getAttribute("listaRegistradoNascimento");
+
+    for(Registrado registrado : listaNatalidade){
+        map = new HashMap<Object,Object>();
+        map.put("label", registrado.getNascimento().getRegistro().getAno_registro());
+        map.put("y", registrado.getNascimento().getIdade_mae());
+        listP.add(map);
+    }
+
+    String dataPointsP = gsonObj.toJson(listP);
+    System.out.println(dataPointsP);
+%>
+
 <!DOCTYPE html>
 <html>
-
 <head>
     <%@include file="/view/include/head.jsp" %>
+    <%@include file="/view/include/graphHead.jsp" %>
     <title>[Mortalidade e Natalidade App] Relatórios de Natalidade</title>
 </head>
 <body>
@@ -89,8 +108,34 @@
         </nav>
 
         <h2 title="RelatoriosNatalidade">Relatórios de Natalidade no Brasil</h2>
+        <script type="text/javascript">
+            window.onload = function() {
+                var chartP = new CanvasJS.Chart("chartContainer1", {
+                    theme: "light2",
+                    title: {
+                        text: "Idade das mãe ao longo dos anos"
+                    },
+                    axisX: {
+                        title: "Ano"
+                    },
+                    axisY: {
+                        title: "Idae",
+                        includeZero: true
+                    },
+                    data: [{
+                        type: "line",
+                        dataPoints : <%out.print(dataPointsP);%>
+                    }]
+                });
+                
+                chartP.render();
+            }
+        </script>
     </div>
 </div>
+
+<div id="chartContainer1" style="height: 370px; width: 50%; margin: auto;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

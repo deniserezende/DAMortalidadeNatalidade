@@ -96,6 +96,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
                     "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
 
+    //TODO revisar se está funcionando (o DELETE_QUERY_NASC não estava, tive que fazer alterações)
     private static final String ALL_QUERY_OBT =
             "SELECT *\n" +
                     "FROM \"DAMortalidade_Natalidade\".\"OBITO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\"\n" +
@@ -104,17 +105,13 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
                     "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n" +
                     "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n ";
+                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt;";
 
     private static final String ALL_QUERY_NASC =
-            "SELECT *\n" +
-                    "FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\"\n" +
-                    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n" +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc;" +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n ";
+    "SELECT * FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\" " +
+    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc " +
+    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc " +
+    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc;";
 
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
@@ -505,11 +502,36 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_NASC);
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
-                Registrado registrado = new Registrado();
-                registrado.getNascimento().getRegistro().setId_registro(result.getInt("id_registro"));
-                registrado.getNascimento().getRegistro().setTipo_registro(result.getString("tipo_registro"));
-                registrado.getNascimento().getRegistro().setAno_registro(result.getInt("ano_registro"));
 
+                Registro registro = new Registro();
+                Nascimento nascimento = new Nascimento();
+                Registrado registrado = new Registrado();
+
+                //atributos do registro
+                registro.setId_registro(result.getInt("id_registro"));
+                registro.setTipo_registro(result.getString("tipo_registro"));
+                registro.setAno_registro(result.getInt("ano_registro"));
+
+                //atributos do nascimento
+                nascimento.setHora_nascimento(result.getTime("hora_nascimento"));
+                nascimento.setIdade_mae(result.getInt("idade_mae"));
+                nascimento.setPeso_nascido_vivo(result.getInt("peso_nascido_vivo"));
+                nascimento.setCod_tipo_parto(result.getInt("cod_tipo_parto"));
+                nascimento.setCod_raca_cor_mae(result.getInt("cod_raca_cor_mae"));
+                nascimento.setCod_estado_civil_mae(result.getInt("cod_estado_civil_mae"));
+
+                //atributos do registrado
+                registrado.setId_registrado(result.getInt("id_registrado"));
+                registrado.setData_nascimento(result.getDate("data_nascimento"));
+                registrado.setCod_municipio_nasc(result.getInt("cod_municipio_nasc"));
+                registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
+                registrado.setCod_sexo(result.getInt("cod_sexo"));
+
+                //vinculando ponteiros
+                nascimento.setRegistro(registro);
+                registrado.setNascimento(nascimento);
+
+                //adicionando um novo registrado na lista
                 registradoList.add(registrado);
             }
         } catch (SQLException error) {
@@ -519,6 +541,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         return registradoList;
     }
 
+    //TODO implementar o all_obito igual o all_nascimento
     @Override
     public List<Registrado> all_obito() {
         List<Registrado> registradoList = new ArrayList<>();
