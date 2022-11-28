@@ -86,7 +86,7 @@ public class CargaController extends HttpServlet{
                 }
                 catch(Exception error) {
                     logger.error("ParseException catch: " + error);
-                    request.getSession().setAttribute("error", "Não foi possível carrehar os dados para plotar o gráfico");
+                    request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
                     response.sendRedirect(request.getContextPath() + servletPath);
                 }
                 break;
@@ -97,8 +97,22 @@ public class CargaController extends HttpServlet{
                 break;
             }
             case "/relatoriosCrescimentoPopulacional": {
-                dispatcher = request.getRequestDispatcher("/view/relatorios/crescimentoPopulacional.jsp");
-                dispatcher.forward(request, response);
+
+                try(DAOFactory daoFactory = DAOFactory.getInstance()){
+
+                    RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
+                    List<String> jsonRegistrosPorAno = registradoDao.qtdRegistrosPorAno();
+
+                    request.setAttribute("qtd_registros_por_ano", jsonRegistrosPorAno);
+
+                    dispatcher = request.getRequestDispatcher("/view/relatorios/crescimentoPopulacional.jsp");
+                    dispatcher.forward(request, response);
+                }
+                catch(Exception error) {
+                    logger.error("ParseException catch: " + error);
+                    request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
+                    response.sendRedirect(request.getContextPath() + servletPath);
+                }
                 break;
             }
         }
@@ -136,7 +150,7 @@ public class CargaController extends HttpServlet{
                     List<FileItem> items = upload.parseRequest(request);
 
                     // Process the uploaded items
-                    Iterator<FileItem> iter = items.iterator();
+                        Iterator<FileItem> iter = items.iterator();
 
                     // File uploaded
                     File uploadedFile = null;

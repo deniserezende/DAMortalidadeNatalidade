@@ -1,5 +1,6 @@
 package dao;
 
+import com.google.gson.Gson;
 import model.Nascimento;
 import model.Obito;
 import model.Registrado;
@@ -10,10 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class PgRegistradoDAO implements RegistradoDAO {
 
@@ -113,6 +118,9 @@ public class PgRegistradoDAO implements RegistradoDAO {
     "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc " +
     "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc;";
 
+    private static final String QTD_REGISTROS_POR_ANO =
+            "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"\n" +
+                    "\tGROUP BY ano_registro, tipo_registro;";
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
     }
@@ -566,5 +574,39 @@ public class PgRegistradoDAO implements RegistradoDAO {
     @Override
     public List<Registrado> all() throws SQLException {
         return null;
+    }
+
+    public List<String> qtdRegistrosPorAno(){
+
+        List<String> dataPoints = new ArrayList<String>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map = null;
+        List<Map<Object,Object>> listaNascimentos = new ArrayList<Map<Object,Object>>();
+        List<Map<Object,Object>> listaObitos = new ArrayList<Map<Object,Object>>();
+
+        try (PreparedStatement statement = connection.prepareStatement(QTD_REGISTROS_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+                while(result.next()) {
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+
+                    if(result.getString("tipo_registro").equals("nascimento")){
+                        listaNascimentos.add(map);
+                    }
+                    else{
+                        listaObitos.add(map);
+                    }
+                }
+            String dataPointsNascimentos = gsonObj.toJson(listaNascimentos);
+            String dataPointsObitos = gsonObj.toJson(listaObitos);
+
+            dataPoints.add(dataPointsNascimentos);
+            dataPoints.add(dataPointsObitos);
+
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+        return dataPoints;
     }
 }
