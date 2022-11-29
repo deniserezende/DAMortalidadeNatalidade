@@ -150,7 +150,10 @@ public class CargaController extends HttpServlet{
                     List<FileItem> items = upload.parseRequest(request);
 
                     // Process the uploaded items
-                        Iterator<FileItem> iter = items.iterator();
+                    Iterator<FileItem> iter = items.iterator();
+
+                    // Separator
+                    String separator = ";";
 
                     // File uploaded
                     File uploadedFile = null;
@@ -189,6 +192,7 @@ public class CargaController extends HttpServlet{
                                     carga.setTitulo_carga(fieldValue);
                                     break;
                                 case "separador_csv":
+                                    separator = fieldValue;
                                     // TODO tratar o separador do CSV aqui
                                     //recebemos o separador do CSV aqui
                                     logger.error("Separador de CSV informado: " + fieldValue);
@@ -249,11 +253,11 @@ public class CargaController extends HttpServlet{
                         List<String> lines = new ArrayList<>();
                         if(carga.getTipo_carga() == 1){ // Natality
                             logger.info("Calling ReadCSVNatality");
-                            ReadCSVNatality(reader, lines, daoRegistrado);
+                            ReadCSVNatality(reader, lines, daoRegistrado, separator);
                         }
                         else{ // Mortality
                             logger.info("Calling ReadCSVMortality");
-                            ReadCSVMortality(reader, lines, daoRegistrado);
+                            ReadCSVMortality(reader, lines, daoRegistrado, separator);
                         }
                         // Deleting temporary file
                         uploadedFile.delete();
@@ -316,32 +320,23 @@ public class CargaController extends HttpServlet{
         }
     }
 
-    protected void ReadCSVMortality(BufferedReader reader, List<String> lines, RegistradoDAO daoRegistrado) throws IOException {
+    protected void ReadCSVMortality(BufferedReader reader, List<String> lines, RegistradoDAO daoRegistrado, String separator) throws IOException {
         // Opening file and looping through it
         String line;
         // Looping line by line adding to a list
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
-
-        boolean isComma = false;
+        String separator_regex = "\\s*" + separator.toString() + "\\s*";
         // Creating a list of all the columns names
-        List<String> first_line = Arrays.asList(lines.get(0).split("\\s*;\\s*"));
-        logger.info(first_line);
-        // TODO verificar se posso fazer assim
-        if(first_line.size() < 2){
-            isComma = true;
-            first_line = Arrays.asList(lines.get(0).split("\\s*,\\s*"));
-        }
+        List<String> first_line = Arrays.asList(lines.get(0).split(separator_regex));
+        logger.error(first_line);
+
         List<String> next_line;
         // Loop through the lines
         for(int i = 1; i < lines.size(); i++){
-            if(isComma){
-                next_line = Arrays.asList(lines.get(i).split("\\s*,\\s*"));
-            }
-            else{
-                next_line = Arrays.asList(lines.get(i).split("\\s*;\\s*"));
-            }
+            next_line = Arrays.asList(lines.get(i).split(separator_regex));
+
             logger.info(next_line);
 
             //Create object for each new column
@@ -354,8 +349,15 @@ public class CargaController extends HttpServlet{
             registrado.getObito().setRegistro(registro);
             logger.info("objetcts linked");
 
+            logger.error(first_line.size());
             // Loop through the columns inserting attributes in object
             for(int j = 0; j < first_line.size(); j++){
+                // if next line doesn't have the same amount of columns program shouldn't try to insert
+                if(j >= next_line.size()){
+                    logger.error("Line amount of columns isn't equal to the first line\nBecause last columns are null");
+                    break;
+                }
+
                 if(next_line.get(j).equals("") || next_line.get(j) == ""){
                     logger.warn("next == vazio");
                 }
@@ -565,21 +567,21 @@ public class CargaController extends HttpServlet{
 
     }
 
-    protected void ReadCSVNatality(BufferedReader reader, List<String> lines, RegistradoDAO daoRegistrado) throws IOException {
+    protected void ReadCSVNatality(BufferedReader reader, List<String> lines, RegistradoDAO daoRegistrado, String separator) throws IOException {
         // Opening file and looping through it
         String line;
         // Looping line by line adding to a list
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
-
+        String separator_regex = "\\s*" + separator + "\\s*";
         // Creating a list of all the columns names
-        List<String> first_line = Arrays.asList(lines.get(0).split("\\s*;\\s*"));
+        List<String> first_line = Arrays.asList(lines.get(0).split(separator_regex));
         logger.info(first_line);
 
         // Loop through the lines
         for(int i = 1; i < lines.size(); i++){
-            List<String> next_line = Arrays.asList(lines.get(i).split("\\s*;\\s*"));
+            List<String> next_line = Arrays.asList(lines.get(i).split(separator_regex));
             logger.info(next_line);
 
             //Create object for each new column
@@ -594,7 +596,12 @@ public class CargaController extends HttpServlet{
 
             // Loop through the columns inserting attributes in object
             for(int j = 0; j < first_line.size(); j++){
-                if(next_line.get(j) == ""){
+                if(j >= next_line.size()){
+                    logger.error("Line amount of columns isn't equal to the first line\nBecause last columns are null");
+                    break;
+                }
+
+                if(next_line.get(j).equals("") || next_line.get(j) == ""){
                     logger.info("next == vazio");
                 }
                 else{

@@ -133,9 +133,9 @@
             </div>
 
             <div>
-                <input type="radio" id="comma" name="separador_csv" value="comma">
+                <input type="radio" id="comma" name="separador_csv" value=",">
                 <label for="comma">Vírgula (,) como separador do CSV</label><br>
-                <input type="radio" id="semicolon" name="separador_csv" value="semicolon">
+                <input type="radio" id="semicolon" name="separador_csv" value=";">
                 <label for="semicolon">Ponto e vírgula (;) como separador do CSV</label><br>
             </div>
 
