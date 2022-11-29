@@ -17,9 +17,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
+@SuppressWarnings({"SqlDialectInspection", "Convert2Diamond"})
 public class PgRegistradoDAO implements RegistradoDAO {
 
     private final Connection connection;
@@ -233,7 +232,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
     // TODO colocar uma transação no create (?)
     @Override
-    public void create(Registrado registrado) throws SQLException {
+    public void create(Registrado registrado){
         if(registrado.getObito() != null){
             try{
                 create_registro(registrado.getObito().getRegistro());
@@ -446,7 +445,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public void update(Registrado registrado) throws SQLException {
+    public void update(Registrado registrado){
         if(registrado.getObito() != null){
             update_obito(registrado.getObito());
         }
@@ -457,7 +456,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     // TODO delete não testado
-    public void delete_nascimento(Registrado registrado) throws SQLException {
+    public void delete_nascimento(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_NASC)) {
             statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getNascimento().getRegistro().getId_registro());
@@ -475,7 +474,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
-    public void delete_obito(Registrado registrado) throws SQLException {
+    public void delete_obito(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_OBT)) {
             statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getObito().getRegistro().getId_registro());
@@ -494,7 +493,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public void delete(Integer id_registrado) throws SQLException {
+    public void delete(Integer id_registrado){
         Registrado registrado = read(id_registrado);
         if(registrado.getObito() != null){
             delete_obito(registrado);
@@ -573,15 +572,15 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public List<Registrado> all() throws SQLException {
+    public List<Registrado> all(){
         return null;
     }
 
     public List<String> qtdRegistrosPorAno(){
 
-        List<String> dataPoints = new ArrayList<String>();
+        List<String> dataPoints = new ArrayList<>();
         Gson gsonObj = new Gson();
-        Map<Object,Object> map = null;
+        Map<Object,Object> map;
         List<Map<Object,Object>> listaNascimentos = new ArrayList<Map<Object,Object>>();
         List<Map<Object,Object>> listaObitos = new ArrayList<Map<Object,Object>>();
 
