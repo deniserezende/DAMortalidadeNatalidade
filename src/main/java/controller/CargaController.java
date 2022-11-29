@@ -32,7 +32,10 @@ import javax.servlet.http.HttpSession;
         urlPatterns = {
                 "",
                 "/cargacreate",
-                "/historico"
+                "/historico",
+                "/relatoriosNatalidade",
+                "/relatoriosMortalidade",
+                "/relatoriosCrescimentoPopulacional"
         }
 )
 
@@ -47,6 +50,7 @@ public class CargaController extends HttpServlet{
         //HttpSession session;
         RequestDispatcher dispatcher;
         DAO<Carga> dao;
+        String servletPath = request.getServletPath();
 
         switch (request.getServletPath()) {
             case "": {
@@ -70,6 +74,45 @@ public class CargaController extends HttpServlet{
             case "/cargacreate": {
                 dispatcher = request.getRequestDispatcher("/view/carga/create.jsp");
                 dispatcher.forward(request, response);
+                break;
+            }
+            case "/relatoriosNatalidade": {
+                try(DAOFactory daoFactory = DAOFactory.getInstance()){
+                    RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
+                    List<Registrado> listaNascimentos = registradoDao.all_nascimento();
+                    request.setAttribute("listaRegistradoNascimento", listaNascimentos);
+                    dispatcher = request.getRequestDispatcher("/view/relatorios/natalidade.jsp");
+                    dispatcher.forward(request, response);
+                }
+                catch(Exception error) {
+                    logger.error("ParseException catch: " + error);
+                    request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
+                    response.sendRedirect(request.getContextPath() + servletPath);
+                }
+                break;
+            }
+            case "/relatoriosMortalidade": {
+                dispatcher = request.getRequestDispatcher("/view/relatorios/mortalidade.jsp");
+                dispatcher.forward(request, response);
+                break;
+            }
+            case "/relatoriosCrescimentoPopulacional": {
+
+                try(DAOFactory daoFactory = DAOFactory.getInstance()){
+
+                    RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
+                    List<String> jsonRegistrosPorAno = registradoDao.qtdRegistrosPorAno();
+
+                    request.setAttribute("qtd_registros_por_ano", jsonRegistrosPorAno);
+
+                    dispatcher = request.getRequestDispatcher("/view/relatorios/crescimentoPopulacional.jsp");
+                    dispatcher.forward(request, response);
+                }
+                catch(Exception error) {
+                    logger.error("ParseException catch: " + error);
+                    request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
+                    response.sendRedirect(request.getContextPath() + servletPath);
+                }
                 break;
             }
         }
@@ -107,7 +150,7 @@ public class CargaController extends HttpServlet{
                     List<FileItem> items = upload.parseRequest(request);
 
                     // Process the uploaded items
-                    Iterator<FileItem> iter = items.iterator();
+                        Iterator<FileItem> iter = items.iterator();
 
                     // File uploaded
                     File uploadedFile = null;
@@ -256,6 +299,19 @@ public class CargaController extends HttpServlet{
                     session.invalidate();
                 }
                 response.sendRedirect(request.getContextPath() + "/view/carga/index.jsp");
+                break;
+            }
+            case "/relatoriosNatalidade": {
+                response.sendRedirect(request.getContextPath() + "/view/relatorios/natalidade.jsp");
+                break;
+            }
+            case "/relatoriosMortalidade": {
+                response.sendRedirect(request.getContextPath() + "/view/relatorios/mortalidade.jsp");
+                break;
+            }
+            case "/relatoriosCrescimentoPopulacional": {
+                response.sendRedirect(request.getContextPath() + "/view/relatorios/crescimentoPopulacional.jsp");
+                break;
             }
         }
     }

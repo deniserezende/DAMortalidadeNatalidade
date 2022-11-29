@@ -1,5 +1,6 @@
 package dao;
 
+import com.google.gson.Gson;
 import model.Nascimento;
 import model.Obito;
 import model.Registrado;
@@ -10,11 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@SuppressWarnings({"SqlDialectInspection", "Convert2Diamond"})
 public class PgRegistradoDAO implements RegistradoDAO {
 
     private final Connection connection;
@@ -96,6 +100,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
                     "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
 
+    //TODO revisar se está funcionando (o DELETE_QUERY_NASC não estava, tive que fazer alterações)
     private static final String ALL_QUERY_OBT =
             "SELECT *\n" +
                     "FROM \"DAMortalidade_Natalidade\".\"OBITO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\"\n" +
@@ -104,18 +109,18 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
                     "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n" +
                     "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n ";
+                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt;";
 
     private static final String ALL_QUERY_NASC =
-            "SELECT *\n" +
-                    "FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\"\n" +
-                    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n" +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc;" +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n ";
+    "SELECT * FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\" " +
+    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc " +
+    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc " +
+    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc;";
 
+    private static final String QTD_REGISTROS_POR_ANO =
+            "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"\n" +
+                    "GROUP BY ano_registro, tipo_registro\n" +
+                    "ORDER BY ano_registro;";
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
     }
@@ -227,7 +232,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
     // TODO colocar uma transação no create (?)
     @Override
-    public void create(Registrado registrado) throws SQLException {
+    public void create(Registrado registrado){
         if(registrado.getObito() != null){
             try{
                 create_registro(registrado.getObito().getRegistro());
@@ -440,7 +445,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public void update(Registrado registrado) throws SQLException {
+    public void update(Registrado registrado){
         if(registrado.getObito() != null){
             update_obito(registrado.getObito());
         }
@@ -451,7 +456,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     // TODO delete não testado
-    public void delete_nascimento(Registrado registrado) throws SQLException {
+    public void delete_nascimento(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_NASC)) {
             statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getNascimento().getRegistro().getId_registro());
@@ -469,7 +474,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
-    public void delete_obito(Registrado registrado) throws SQLException {
+    public void delete_obito(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_OBT)) {
             statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getObito().getRegistro().getId_registro());
@@ -488,7 +493,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public void delete(Integer id_registrado) throws SQLException {
+    public void delete(Integer id_registrado){
         Registrado registrado = read(id_registrado);
         if(registrado.getObito() != null){
             delete_obito(registrado);
@@ -505,11 +510,36 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_NASC);
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
-                Registrado registrado = new Registrado();
-                registrado.getNascimento().getRegistro().setId_registro(result.getInt("id_registro"));
-                registrado.getNascimento().getRegistro().setTipo_registro(result.getString("tipo_registro"));
-                registrado.getNascimento().getRegistro().setAno_registro(result.getInt("ano_registro"));
 
+                Registro registro = new Registro();
+                Nascimento nascimento = new Nascimento();
+                Registrado registrado = new Registrado();
+
+                //atributos do registro
+                registro.setId_registro(result.getInt("id_registro"));
+                registro.setTipo_registro(result.getString("tipo_registro"));
+                registro.setAno_registro(result.getInt("ano_registro"));
+
+                //atributos do nascimento
+                nascimento.setHora_nascimento(result.getTime("hora_nascimento"));
+                nascimento.setIdade_mae(result.getInt("idade_mae"));
+                nascimento.setPeso_nascido_vivo(result.getInt("peso_nascido_vivo"));
+                nascimento.setCod_tipo_parto(result.getInt("cod_tipo_parto"));
+                nascimento.setCod_raca_cor_mae(result.getInt("cod_raca_cor_mae"));
+                nascimento.setCod_estado_civil_mae(result.getInt("cod_estado_civil_mae"));
+
+                //atributos do registrado
+                registrado.setId_registrado(result.getInt("id_registrado"));
+                registrado.setData_nascimento(result.getDate("data_nascimento"));
+                registrado.setCod_municipio_nasc(result.getInt("cod_municipio_nasc"));
+                registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
+                registrado.setCod_sexo(result.getInt("cod_sexo"));
+
+                //vinculando ponteiros
+                nascimento.setRegistro(registro);
+                registrado.setNascimento(nascimento);
+
+                //adicionando um novo registrado na lista
                 registradoList.add(registrado);
             }
         } catch (SQLException error) {
@@ -519,6 +549,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         return registradoList;
     }
 
+    //TODO implementar o all_obito igual o all_nascimento
     @Override
     public List<Registrado> all_obito() {
         List<Registrado> registradoList = new ArrayList<>();
@@ -541,7 +572,41 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public List<Registrado> all() throws SQLException {
+    public List<Registrado> all(){
         return null;
+    }
+
+    public List<String> qtdRegistrosPorAno(){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaNascimentos = new ArrayList<Map<Object,Object>>();
+        List<Map<Object,Object>> listaObitos = new ArrayList<Map<Object,Object>>();
+
+        try (PreparedStatement statement = connection.prepareStatement(QTD_REGISTROS_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+                while(result.next()) {
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+
+                    if(result.getString("tipo_registro").equals("nascimento")){
+                        listaNascimentos.add(map);
+                    }
+                    else{
+                        listaObitos.add(map);
+                    }
+                }
+            String dataPointsNascimentos = gsonObj.toJson(listaNascimentos);
+            String dataPointsObitos = gsonObj.toJson(listaObitos);
+
+            dataPoints.add(dataPointsNascimentos);
+            dataPoints.add(dataPointsObitos);
+
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+        return dataPoints;
     }
 }
