@@ -1,22 +1,25 @@
 <%--
   Created by IntelliJ IDEA.
   User: laura
-  Date: 19/10/2022
-  Time: 11:10
+  Date: 25/11/2022
+  Time: 14:11
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@page contentType="text/html;charset=ISO-8859-1" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    List<String> listaIdadesMaes = (List<String>)request.getAttribute("listaIdadesMaes");
+    String idadesMaes = listaIdadesMaes.get(0);
+    System.out.println(listaIdadesMaes);
+%>
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <%@include file="/view/include/head.jsp" %>
-    <title>[Mortalidade e Natalidade App] Nova carga</title>
+    <%@include file="/view/include/graphHead.jsp" %>
+    <title>[Mortalidade e Natalidade App] Relatórios de Natalidade</title>
 </head>
-
 <body>
 <div class="wrapper">
     <!-- Sidebar Holder -->
@@ -33,14 +36,14 @@
             <li>
                 <a href="${pageContext.servletContext.contextPath}/historico">Histórico de cargas</a>
             </li>
-            <li class="active">
-                <a href="#">Nova carga</a>
+            <li>
+                <a href="${pageContext.servletContext.contextPath}/cargacreate">Nova carga</a>
             </li>
             <li>
                 <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Relatórios</a>
                 <ul class="collapse list-unstyled" id="pageSubmenu">
-                    <li>
-                        <a href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Relatórios de Natalidade</a>
+                    <li class="active">
+                        <a href="#">Relatórios de Natalidade</a>
                     </li>
                     <li>
                         <a href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Relatórios de Mortalidade</a>
@@ -75,11 +78,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/historico">Histórico</a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Carga</a>
-                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Natalidade</a>
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/cargacreate">Carga</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Natalidade</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Mortalidade</a>
@@ -92,60 +95,40 @@
             </div>
         </nav>
 
-        <h2 title="NovaCarga">Nova carga</h2>
-        <form
-                class="form"
-                action="${pageContext.servletContext.contextPath}/cargacreate"
-                enctype="multipart/form-data"
-                method="POST">
+        <h2 title="RelatoriosNatalidade">Relatórios de Natalidade no Brasil</h2>
 
-            <div class="form-group">
-                <label class="control-label" for="titulo">Descrição carga</label>
-                <input id="titulo" class="form-control" type="text" name="titulo" required autofocus/>
-                <p class="help-block"></p>
-            </div>
+        <script type="text/javascript">
+            window.onload = function() {
+                var chartP = new CanvasJS.Chart("chartContainer1", {
+                    theme: "light2",
+                    title: {
+                        text: "Idade média das mães ao longo dos anos"
+                    },
+                    axisX: {
+                        title: "Ano"
+                    },
+                    axisY: {
+                        title: "Idade (anos)",
+                        includeZero: true
+                    },
+                    data: [{
+                        type: "bar",
+                        dataPoints : <%out.print(idadesMaes);%>
+                    }],
+                    options: {
+                        indexAxis: 'x',
+                    }
+                });
 
-            <div class="form-group">
-                <label class="control-label" for="responsavel">Responsavel</label>
-                <input id="responsavel" class="form-control" type="text" name="responsavel" required autofocus/>
-                <p class="help-block"></p>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label" for="email">E-mail</label>
-                <input id="email" class="form-control" type="email" name="email" required autofocus/>
-                <p class="help-block"></p>
-            </div>
-
-            <div>
-                <input type="radio" id="Mortalidade" name="tipo_carga" value="Registro de Mortalidade">
-                <label for="Mortalidade">Registro de Mortalidade</label><br>
-                <input type="radio" id="Natalidade" name="tipo_carga" value="Registro de Natalidade">
-                <label for="Natalidade">Registro de Natalidade</label><br>
-            </div>
-
-            <div class="form-group">
-                <label for="arquivo">Arquivo (.csv)</label>
-                <input type="file"
-                       class="form-control" id="arquivo"
-                       name="arquivo"
-                       accept=".csv"/>
-            </div>
-
-            <div>
-                <input type="radio" id="comma" name="separador_csv" value=",">
-                <label for="comma">Vírgula (,) como separador do CSV</label><br>
-                <input type="radio" id="semicolon" name="separador_csv" value=";">
-                <label for="semicolon">Ponto e vírgula (;) como separador do CSV</label><br>
-            </div>
-
-            <div class="text-center">
-                <button class="btn btn-lg btn-primary" type="submit">Salvar</button>
-            </div>
-        </form>
-
+                chartP.render();
+            }
+        </script>
     </div>
 </div>
+
+<div id="chartContainer1" style="height: 370px; width: 50%; margin: auto;"></div>
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

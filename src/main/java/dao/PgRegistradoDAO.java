@@ -1,120 +1,127 @@
 package dao;
 
+import com.google.gson.Gson;
 import model.Nascimento;
 import model.Obito;
 import model.Registrado;
 import model.Registro;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Connection;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@SuppressWarnings({"SqlDialectInspection", "Convert2Diamond"})
 public class PgRegistradoDAO implements RegistradoDAO {
 
     private final Connection connection;
     protected static final Logger logger = LogManager.getLogger(PgRegistradoDAO.class);
 
     private static final String CREATE_REGISTRO =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro, ano_registro) " +
-                    "VALUES(?, ?, ?);";
+    "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRO\"(id_registro, tipo_registro, ano_registro) " +
+            "VALUES(?, ?, ?);";
     private static final String CREATE_OBITO =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"OBITO\"(id_registro, tipo_registro, ano_registro," +
-                    "cod_tipo_obito, data_obito, hora_obito, " +
-                    "idade_falecido, cod_est_civ_falecido, cod_local_obito, cod_municipio_obito, cod_circ_obito) " +
-                    "VALUES(?, ?, ?, ?, to_date(?, 'yyyy-mm-dd'), ?, ?, ?, ?, ?, ?);";
+    "INSERT INTO \"DAMortalidade_Natalidade\".\"OBITO\"(id_registro, tipo_registro, ano_registro," +
+            "cod_tipo_obito, data_obito, hora_obito, " +
+            "idade_falecido, cod_est_civ_falecido, cod_local_obito, cod_municipio_obito, cod_circ_obito) " +
+            "VALUES(?, ?, ?, ?, to_date(?, 'yyyy-mm-dd'), ?, ?, ?, ?, ?, ?);";
 
     private static final String CREATE_NASCIMENTO =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"NASCIMENTO\"(id_registro, tipo_registro, ano_registro," +
-                    "hora_nascimento, cod_tipo_parto, cod_raca_cor_mae, idade_mae, cod_estado_civil_mae, peso_nascido_vivo)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    "INSERT INTO \"DAMortalidade_Natalidade\".\"NASCIMENTO\"(id_registro, tipo_registro, ano_registro," +
+            "hora_nascimento, cod_tipo_parto, cod_raca_cor_mae, idade_mae, cod_estado_civil_mae, peso_nascido_vivo)" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String CREATE_REGISTRADO_OBT =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt," +
-                    "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
-                    "VALUES(?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd'), ?);";
+    "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_obt, tipo_registro_obt, ano_registro_obt," +
+            "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
+            "VALUES(?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd'), ?);";
 
     private static final String CREATE_REGISTRADO_NASC =
-            "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_nasc, tipo_registro_nasc, ano_registro_nasc," +
-                    "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
-                    "VALUES(?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd'), ?);";
+    "INSERT INTO \"DAMortalidade_Natalidade\".\"REGISTRADO\"(id_registro_nasc, tipo_registro_nasc, ano_registro_nasc," +
+            "cod_municipio_nasc, cod_raca_cor, data_nascimento, cod_sexo) " +
+            "VALUES(?, ?, ?, ?, ?, to_date(?, 'yyyy-mm-dd'), ?);";
 
     private static final String READ_QUERY_OBT =
-            "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\" " +
-                    "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n " +
-                    "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n " +
-                    "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n " +
-                    "AND id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
+    "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\" " +
+            "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n " +
+            "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n " +
+            "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n " +
+            "AND id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
 
     private static final String READ_QUERY_NASC =
-            "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"NASCIMENTO\" " +
-                    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n " +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc\n " +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n " +
-                    "AND id_registro_nasc = ? AND tipo_registro_nasc = ? AND ano_registro_nasc = ?;";
+    "SELECT * FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"NASCIMENTO\" " +
+            "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n " +
+            "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc\n " +
+            "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = " +
+            "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n " +
+            "AND id_registro_nasc = ? AND tipo_registro_nasc = ? AND ano_registro_nasc = ?;";
 
     private static final String UPDATE_OBITO =
-            "UPDATE \"DAMortalidade_Natalidade\".\"OBITO\"" +
-                    "SET cod_tipo_obito = ?, data_obito = ?, hora_obito = ?, idade_falecido = ?, " +
-                    "cod_est_civ_falecido = ?, cod_local_obito = ?, cod_municipio_obito = ?, cod_circ_obito = ?" +
-                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?;";
+    "UPDATE \"DAMortalidade_Natalidade\".\"OBITO\"" +
+            "SET cod_tipo_obito = ?, data_obito = ?, hora_obito = ?, idade_falecido = ?, " +
+            "cod_est_civ_falecido = ?, cod_local_obito = ?, cod_municipio_obito = ?, cod_circ_obito = ?" +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?;";
 
     private static final String UPDATE_NASCIMENTO =
-            "UPDATE \"DAMortalidade_Natalidade\".\"NASCIMENTO\"" +
-                    "SET hora_nascimento = ?, cod_tipo_parto = ?, cod_raca_cor_mae = ?, idade_mae = ?, cod_estado_civil_mae = ?, peso_nascido_vivo = ?" +
-                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?;";
+    "UPDATE \"DAMortalidade_Natalidade\".\"NASCIMENTO\"" +
+            "SET hora_nascimento = ?, cod_tipo_parto = ?, cod_raca_cor_mae = ?, idade_mae = ?, cod_estado_civil_mae = ?, peso_nascido_vivo = ?" +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?;";
 
     private static final String UPDATE_REGISTRADO =
-            "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
-                    "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ? " +
-                    "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
+    "UPDATE \"DAMortalidade_Natalidade\".\"REGISTRADO\"" +
+            "SET cod_municipio_nasc = ?, cod_raca_cor = ?, data_nascimento = ?, cod_sexo = ? " +
+            "WHERE id_registro_obt = ? AND tipo_registro_obt = ? AND ano_registro_obt = ?;";
 
     private static final String DELETE_QUERY_OBT =
-            "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
-                    "WHERE id_registrado = ?; \n " +
-                    "DELETE FROM \"DAMortalidade_Natalidade\".\"OBITO\"" +
-                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n " +
-                    "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
-                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
+    "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
+            "WHERE id_registrado = ?; \n " +
+            "DELETE FROM \"DAMortalidade_Natalidade\".\"OBITO\"" +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n " +
+            "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
 
     private static final String DELETE_QUERY_NASC =
-            "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
-                    "WHERE id_registrado = ?; \n " +
-                    "DELETE FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\"" +
-                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n " +
-                    "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
-                    "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
+    "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\" +\n" +
+            "WHERE id_registrado = ?; \n " +
+            "DELETE FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\"" +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n " +
+            "DELETE FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"" +
+            "WHERE id_registro = ? AND tipo_registro = ? AND ano_registro = ?; \n";
 
     private static final String ALL_QUERY_OBT =
-            "SELECT *\n" +
-                    "FROM \"DAMortalidade_Natalidade\".\"OBITO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\"\n" +
-                    "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n" +
-                    "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n" +
-                    "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n ";
+    "SELECT * FROM \"DAMortalidade_Natalidade\".\"OBITO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\" " +
+            "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt " +
+            "AND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt " +
+            "AND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt;";
 
     private static final String ALL_QUERY_NASC =
-            "SELECT *\n" +
-                    "FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\"\n" +
-                    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n" +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc;" +
-                    "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = " +
-                    "\"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n ";
+    "SELECT * FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"REGISTRADO\" " +
+        "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc " +
+        "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc " +
+        "AND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc;";
+
+    private static final String QTD_REGISTROS_POR_ANO =
+    "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"\n" +
+            "GROUP BY ano_registro, tipo_registro\n" +
+            "ORDER BY ano_registro;";
+
+    private static final String IDADES_MAES_POR_ANO =
+            "SELECT MIN(idade_mae) AS menor_idade_mae, \n" +
+                    "\t MAX(idade_mae) AS maior_idade_mae, \n" +
+                    "\t ROUND(AVG(idade_mae), 0) AS media_idade_mae,\n" +
+                    "\t ano_registro\n" +
+                    "FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\"\n" +
+                    "GROUP BY ano_registro\n" +
+                    "ORDER BY ano_registro;";
 
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
@@ -227,7 +234,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
     // TODO colocar uma transação no create (?)
     @Override
-    public void create(Registrado registrado) throws SQLException {
+    public void create(Registrado registrado){
         if(registrado.getObito() != null){
             try{
                 create_registro(registrado.getObito().getRegistro());
@@ -440,7 +447,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public void update(Registrado registrado) throws SQLException {
+    public void update(Registrado registrado){
         if(registrado.getObito() != null){
             update_obito(registrado.getObito());
         }
@@ -451,7 +458,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     // TODO delete não testado
-    public void delete_nascimento(Registrado registrado) throws SQLException {
+    public void delete_nascimento(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_NASC)) {
             statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getNascimento().getRegistro().getId_registro());
@@ -469,7 +476,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
-    public void delete_obito(Registrado registrado) throws SQLException {
+    public void delete_obito(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_OBT)) {
             statement.setInt(1, registrado.getId_registrado());
             statement.setInt(2, registrado.getObito().getRegistro().getId_registro());
@@ -488,7 +495,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public void delete(Integer id_registrado) throws SQLException {
+    public void delete(Integer id_registrado){
         Registrado registrado = read(id_registrado);
         if(registrado.getObito() != null){
             delete_obito(registrado);
@@ -505,11 +512,36 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_NASC);
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
-                Registrado registrado = new Registrado();
-                registrado.getNascimento().getRegistro().setId_registro(result.getInt("id_registro"));
-                registrado.getNascimento().getRegistro().setTipo_registro(result.getString("tipo_registro"));
-                registrado.getNascimento().getRegistro().setAno_registro(result.getInt("ano_registro"));
 
+                Registro registro = new Registro();
+                Nascimento nascimento = new Nascimento();
+                Registrado registrado = new Registrado();
+
+                //atributos do registro
+                registro.setId_registro(result.getInt("id_registro"));
+                registro.setTipo_registro(result.getString("tipo_registro"));
+                registro.setAno_registro(result.getInt("ano_registro"));
+
+                //atributos do nascimento
+                nascimento.setHora_nascimento(result.getTime("hora_nascimento"));
+                nascimento.setIdade_mae(result.getInt("idade_mae"));
+                nascimento.setPeso_nascido_vivo(result.getInt("peso_nascido_vivo"));
+                nascimento.setCod_tipo_parto(result.getInt("cod_tipo_parto"));
+                nascimento.setCod_raca_cor_mae(result.getInt("cod_raca_cor_mae"));
+                nascimento.setCod_estado_civil_mae(result.getInt("cod_estado_civil_mae"));
+
+                //atributos do registrado
+                registrado.setId_registrado(result.getInt("id_registrado"));
+                registrado.setData_nascimento(result.getDate("data_nascimento"));
+                registrado.setCod_municipio_nasc(result.getInt("cod_municipio_nasc"));
+                registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
+                registrado.setCod_sexo(result.getInt("cod_sexo"));
+
+                //vinculando ponteiros
+                nascimento.setRegistro(registro);
+                registrado.setNascimento(nascimento);
+
+                //adicionando um novo registrado na lista
                 registradoList.add(registrado);
             }
         } catch (SQLException error) {
@@ -519,6 +551,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         return registradoList;
     }
 
+    //TODO implementar o all_obito igual o all_nascimento
     @Override
     public List<Registrado> all_obito() {
         List<Registrado> registradoList = new ArrayList<>();
@@ -526,11 +559,38 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY_OBT);
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
-                Registrado registrado = new Registrado();
-                registrado.getObito().getRegistro().setId_registro(result.getInt("id_registro"));
-                registrado.getObito().getRegistro().setTipo_registro(result.getString("tipo_registro"));
-                registrado.getObito().getRegistro().setAno_registro(result.getInt("ano_registro"));
 
+                Registro registro = new Registro();
+                Obito obito = new Obito();
+                Registrado registrado = new Registrado();
+
+                //atributos do registro
+                registro.setId_registro(result.getInt("id_registro"));
+                registro.setTipo_registro(result.getString("tipo_registro"));
+                registro.setAno_registro(result.getInt("ano_registro"));
+
+                //atributos do obito
+                obito.setCod_est_civ_falecido(result.getInt("cod_est_civ_falecido"));
+                obito.setCod_municipio_obito(result.getInt("cod_municipio_obito"));
+                obito.setCod_tipo_obito(result.getInt("cod_tipo_obito"));
+                obito.setCod_circ_obito(result.getInt("cod_circ_obito"));
+                obito.setCod_local_obito(result.getInt("cod_local_obito"));
+                obito.setIdade_falecido(result.getInt("idade_falecido"));
+                obito.setData_obito(result.getDate("data_obito"));
+                obito.setHora_obito(result.getTime("hora_obito"));
+
+                //atributos do registrado
+                registrado.setId_registrado(result.getInt("id_registrado"));
+                registrado.setData_nascimento(result.getDate("data_nascimento"));
+                registrado.setCod_municipio_nasc(result.getInt("cod_municipio_nasc"));
+                registrado.setCod_raca_cor(result.getInt("cod_raca_cor"));
+                registrado.setCod_sexo(result.getInt("cod_sexo"));
+
+                //vinculando ponteiros
+                obito.setRegistro(registro);
+                registrado.setObito(obito);
+
+                //adicionando um novo registrado na lista
                 registradoList.add(registrado);
             }
         } catch (SQLException error) {
@@ -541,7 +601,67 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     @Override
-    public List<Registrado> all() throws SQLException {
+    public List<Registrado> all(){
         return null;
+    }
+
+    public List<String> qtdRegistrosPorAno(){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaNascimentos = new ArrayList<Map<Object,Object>>();
+        List<Map<Object,Object>> listaObitos = new ArrayList<Map<Object,Object>>();
+
+        try (PreparedStatement statement = connection.prepareStatement(QTD_REGISTROS_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+                while(result.next()) {
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+
+                    if(result.getString("tipo_registro").equals("nascimento")){
+                        listaNascimentos.add(map);
+                    }
+                    else{
+                        listaObitos.add(map);
+                    }
+                }
+            String dataPointsNascimentos = gsonObj.toJson(listaNascimentos);
+            String dataPointsObitos = gsonObj.toJson(listaObitos);
+
+            dataPoints.add(dataPointsNascimentos);
+            dataPoints.add(dataPointsObitos);
+
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+        return dataPoints;
+    }
+
+    public List<String> idadesMaesPorAno(){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaIdadesMaes = new ArrayList<Map<Object,Object>>();
+
+        try (PreparedStatement statement = connection.prepareStatement(IDADES_MAES_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+            while(result.next()) {
+                map = new HashMap<Object,Object>();
+                map.put("label", result.getInt("ano_registro"));
+                map.put("y", result.getInt("media_idade_mae"));
+
+                listaIdadesMaes.add(map);
+            }
+            String dataPointsIdadesMaes = gsonObj.toJson(listaIdadesMaes);
+
+            dataPoints.add(dataPointsIdadesMaes);
+
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+        return dataPoints;
     }
 }

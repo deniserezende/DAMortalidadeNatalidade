@@ -34,6 +34,20 @@
             <li>
                 <a href="${pageContext.servletContext.contextPath}/cargacreate">Nova carga</a>
             </li>
+            <li>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Relatórios</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li>
+                        <a href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Relatórios de Natalidade</a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Relatórios de Mortalidade</a>
+                    </li>
+                    <li>
+                        <a href="${pageContext.servletContext.contextPath}/relatoriosCrescimentoPopulacional">Relatórios de Crescimento Populacional</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </nav>
 
@@ -62,6 +76,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.servletContext.contextPath}/cargacreate">Carga</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosNatalidade">Natalidade</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosMortalidade">Mortalidade</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.servletContext.contextPath}/relatoriosCrescimentoPopulacional">Crescimento Populacional</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -69,12 +92,13 @@
 
         <h2 title="Historico">Histórico de cargas</h2>
 
-        <form class="form_histoico_cargas" action="${pageContext.servletContext.contextPath}/historico" method="POST">
+        <form class="form_histoico_cargas" action="${pageContext.servletContext.contextPath}/historico" method="POST" style="font-size: 15px">
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">Data</th>
                     <th scope="col">Horário</th>
+                    <th scope="col">Descrição</th>
                     <th scope="col">Responsável</th>
                     <th scope="col">Email</th>
                     <th scope="col">Nome arquivo</th>
@@ -90,6 +114,9 @@
                         </td>
                         <td>
                             <span class="h4"><c:out value="${carga.hora_carga}"/></span>
+                        </td>
+                        <td>
+                            <span class="h4"><c:out value="${carga.titulo_carga}"/></span>
                         </td>
                         <td>
                             <span class="h4"><c:out value="${carga.responsavel}"/></span>
