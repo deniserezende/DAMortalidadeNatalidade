@@ -121,6 +121,15 @@ public class PgRegistradoDAO implements RegistradoDAO {
             "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"\n" +
                     "GROUP BY ano_registro, tipo_registro\n" +
                     "ORDER BY ano_registro;";
+
+    private static final String IDADES_MAES_POR_ANO =
+            "SELECT MIN(idade_mae) AS menor_idade_mae, \n" +
+                    "\t MAX(idade_mae) AS maior_idade_mae, \n" +
+                    "\t ROUND(AVG(idade_mae), 0) AS media_idade_mae,\n" +
+                    "\t ano_registro\n" +
+                    "FROM \"DAMortalidade_Natalidade\".\"NASCIMENTO\"\n" +
+                    "GROUP BY ano_registro\n" +
+                    "ORDER BY ano_registro;";
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
     }
@@ -603,6 +612,32 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
             dataPoints.add(dataPointsNascimentos);
             dataPoints.add(dataPointsObitos);
+
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+        return dataPoints;
+    }
+
+    public List<String> idadesMaesPorAno(){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaIdadesMaes = new ArrayList<Map<Object,Object>>();
+
+        try (PreparedStatement statement = connection.prepareStatement(IDADES_MAES_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+            while(result.next()) {
+                map = new HashMap<Object,Object>();
+                map.put("label", result.getInt("ano_registro"));
+                map.put("y", result.getInt("media_idade_mae"));
+
+                listaIdadesMaes.add(map);
+            }
+            String dataPointsIdadesMaes = gsonObj.toJson(listaIdadesMaes);
+
+            dataPoints.add(dataPointsIdadesMaes);
 
         } catch (SQLException error) {
             logger.error("all catch: " + error);
