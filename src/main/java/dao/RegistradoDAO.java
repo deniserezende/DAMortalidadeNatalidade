@@ -16,5 +16,7 @@ public interface RegistradoDAO extends DAO<Registrado> {
 
     public abstract Registrado read_obito(Integer id_registro, String tipo_registro, Integer ano_registro);
 
-    List<String> qtdRegistrosPorAno();
+    public List<String> qtdRegistrosPorAno();
+
+    public List<String> idadesMaesPorAno();
 }
