@@ -9,9 +9,7 @@
 
 <%
     List<String> listaIdadesMaes = (List<String>)request.getAttribute("listaIdadesMaes");
-
     String idadesMaes = listaIdadesMaes.get(0);
-
     System.out.println(listaIdadesMaes);
 %>
 
@@ -121,7 +119,7 @@
                         indexAxis: 'x',
                     }
                 });
-                
+
                 chartP.render();
             }
         </script>
