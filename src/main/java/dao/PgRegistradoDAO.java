@@ -120,7 +120,8 @@ public class PgRegistradoDAO implements RegistradoDAO {
 
     private static final String QTD_REGISTROS_POR_ANO =
             "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro FROM \"DAMortalidade_Natalidade\".\"REGISTRO\"\n" +
-                    "\tGROUP BY ano_registro, tipo_registro;";
+                    "GROUP BY ano_registro, tipo_registro\n" +
+                    "ORDER BY ano_registro;";
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
     }
