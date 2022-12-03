@@ -99,11 +99,11 @@
 
         <script type="text/javascript">
             window.onload = function() {
-                var chartP = new CanvasJS.Chart("chartContainer1", {
-                    theme: "light2",
+                var chartP = new CanvasJS.Chart("chartContainer", {
                     title: {
                         text: "Idade média das mães ao longo dos anos"
                     },
+                    animationEnabled: true,
                     axisX: {
                         title: "Ano"
                     },
@@ -112,21 +112,23 @@
                         includeZero: true
                     },
                     data: [{
-                        type: "bar",
+                        type: "column",
                         dataPoints : <%out.print(idadesMaes);%>
                     }],
                     options: {
-                        indexAxis: 'x',
+                        plugins: {
+                            colors: {
+                                enabled: false
+                            }
+                        }
                     }
                 });
-
                 chartP.render();
             }
         </script>
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
     </div>
 </div>
-
-<div id="chartContainer1" style="height: 370px; width: 50%; margin: auto;"></div>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
