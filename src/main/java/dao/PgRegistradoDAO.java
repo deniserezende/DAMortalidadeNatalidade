@@ -149,6 +149,27 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "GROUP BY ano_registro, tipo_registro, raca_cor\n" +
                     "ORDER BY ano_registro;";
 
+    private static final String OBITOS_POR_RACA_POR_ANO_MORTES_NAO_NATURAIS =
+            "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro, raca_cor \n" +
+                    "FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\", \"DAMortalidade_Natalidade\".\"RACA_COR\"\n" +
+                    "WHERE \"DAMortalidade_Natalidade\".\"OBITO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_obt\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"OBITO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_obt\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"OBITO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_obt\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"OBITO\".cod_circ_obito IS NOT null \n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"RACA_COR\".cod_raca_cor = \"DAMortalidade_Natalidade\".\"REGISTRADO\".cod_raca_cor\n" +
+                    "GROUP BY ano_registro, tipo_registro, raca_cor\n" +
+                    "ORDER BY ano_registro;";
+
+    private static final String NASCIMENTOS_POR_RACA_POR_ANO =
+            "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro, raca_cor \n" +
+                    "FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"RACA_COR\"\n" +
+                    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"RACA_COR\".cod_raca_cor = \"DAMortalidade_Natalidade\".\"REGISTRADO\".cod_raca_cor\n" +
+                    "GROUP BY ano_registro, tipo_registro, raca_cor\n" +
+                    "ORDER BY ano_registro;";
+
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
     }
@@ -821,6 +842,168 @@ public class PgRegistradoDAO implements RegistradoDAO {
             dataPoints.add(dataPointsObitosPorSexoPorAno);
             dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno6);
             dataPoints.add(dataPointsObitosPorSexoPorAno);
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+
+        return dataPoints;
+    }
+
+    public List<String> obitosNaoNaturaisPorRacaPorAno(String estado){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaObitosPorAno1 = new ArrayList<Map<Object,Object>>(); // branca
+        List<Map<Object,Object>> listaObitosPorAno2 = new ArrayList<Map<Object,Object>>(); // preta
+        List<Map<Object,Object>> listaObitosPorAno3 = new ArrayList<Map<Object,Object>>(); // amarela
+        List<Map<Object,Object>> listaObitosPorAno4 = new ArrayList<Map<Object,Object>>(); // parda
+        List<Map<Object,Object>> listaObitosPorAno5 = new ArrayList<Map<Object,Object>>(); // indigena
+        List<Map<Object,Object>> listaObitosPorAno6 = new ArrayList<Map<Object,Object>>(); // não consta
+
+        try (PreparedStatement statement = connection.prepareStatement(OBITOS_POR_RACA_POR_ANO_MORTES_NAO_NATURAIS);
+             ResultSet result = statement.executeQuery()) {
+            while(result.next()) {
+                if(Objects.equals(result.getString("raca_cor"), "branca")){
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+                    listaObitosPorAno1.add(map);
+                }
+                else{
+                    if(Objects.equals(result.getString("raca_cor"), "preta")){
+                        map = new HashMap<Object,Object>();
+                        map.put("label", result.getInt("ano_registro"));
+                        map.put("y", result.getInt("qtd_registros"));
+                        listaObitosPorAno2.add(map);
+                    }
+                    else{
+                        if(Objects.equals(result.getString("raca_cor"), "amarela")){
+                            map = new HashMap<Object,Object>();
+                            map.put("label", result.getInt("ano_registro"));
+                            map.put("y", result.getInt("qtd_registros"));
+                            listaObitosPorAno3.add(map);
+                        }
+                        else{
+                            if(Objects.equals(result.getString("raca_cor"), "parda")){
+                                map = new HashMap<Object,Object>();
+                                map.put("label", result.getInt("ano_registro"));
+                                map.put("y", result.getInt("qtd_registros"));
+                                listaObitosPorAno4.add(map);
+                            }
+                            else{
+                                if(Objects.equals(result.getString("raca_cor"), "indígena")){
+                                    map = new HashMap<Object,Object>();
+                                    map.put("label", result.getInt("ano_registro"));
+                                    map.put("y", result.getInt("qtd_registros"));
+                                    listaObitosPorAno5.add(map);
+                                }
+                                else{
+                                    if(Objects.equals(result.getString("raca_cor"), "não consta")){
+                                        map = new HashMap<Object,Object>();
+                                        map.put("label", result.getInt("ano_registro"));
+                                        map.put("y", result.getInt("qtd_registros"));
+                                        listaObitosPorAno6.add(map);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            String dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno1);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+            dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno2);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+            dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno3);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+            dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno4);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+            dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno5);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+            dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno6);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+
+        return dataPoints;
+    }
+
+    public List<String> nascimentosPorRacaPorAno(String estado){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaNascimentosPorAno1 = new ArrayList<Map<Object,Object>>(); // branca
+        List<Map<Object,Object>> listaNascimentosPorAno2 = new ArrayList<Map<Object,Object>>(); // preta
+        List<Map<Object,Object>> listaNascimentosPorAno3 = new ArrayList<Map<Object,Object>>(); // amarela
+        List<Map<Object,Object>> listaNascimentosPorAno4 = new ArrayList<Map<Object,Object>>(); // parda
+        List<Map<Object,Object>> listaNascimentosPorAno5 = new ArrayList<Map<Object,Object>>(); // indigena
+        List<Map<Object,Object>> listaNascimentosPorAno6 = new ArrayList<Map<Object,Object>>(); // não consta
+
+        try (PreparedStatement statement = connection.prepareStatement(NASCIMENTOS_POR_RACA_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+            while(result.next()) {
+                if(Objects.equals(result.getString("raca_cor"), "branca")){
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+                    listaNascimentosPorAno1.add(map);
+                }
+                else{
+                    if(Objects.equals(result.getString("raca_cor"), "preta")){
+                        map = new HashMap<Object,Object>();
+                        map.put("label", result.getInt("ano_registro"));
+                        map.put("y", result.getInt("qtd_registros"));
+                        listaNascimentosPorAno2.add(map);
+                    }
+                    else{
+                        if(Objects.equals(result.getString("raca_cor"), "amarela")){
+                            map = new HashMap<Object,Object>();
+                            map.put("label", result.getInt("ano_registro"));
+                            map.put("y", result.getInt("qtd_registros"));
+                            listaNascimentosPorAno3.add(map);
+                        }
+                        else{
+                            if(Objects.equals(result.getString("raca_cor"), "parda")){
+                                map = new HashMap<Object,Object>();
+                                map.put("label", result.getInt("ano_registro"));
+                                map.put("y", result.getInt("qtd_registros"));
+                                listaNascimentosPorAno4.add(map);
+                            }
+                            else{
+                                if(Objects.equals(result.getString("raca_cor"), "indígena")){
+                                    map = new HashMap<Object,Object>();
+                                    map.put("label", result.getInt("ano_registro"));
+                                    map.put("y", result.getInt("qtd_registros"));
+                                    listaNascimentosPorAno5.add(map);
+                                }
+                                else{
+                                    if(Objects.equals(result.getString("raca_cor"), "não consta")){
+                                        map = new HashMap<Object,Object>();
+                                        map.put("label", result.getInt("ano_registro"));
+                                        map.put("y", result.getInt("qtd_registros"));
+                                        listaNascimentosPorAno6.add(map);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            String dataPointsNascimentosPorSexoPorAno = gsonObj.toJson(listaNascimentosPorAno1);
+            dataPoints.add(dataPointsNascimentosPorSexoPorAno);
+            dataPointsNascimentosPorSexoPorAno = gsonObj.toJson(listaNascimentosPorAno2);
+            dataPoints.add(dataPointsNascimentosPorSexoPorAno);
+            dataPointsNascimentosPorSexoPorAno = gsonObj.toJson(listaNascimentosPorAno3);
+            dataPoints.add(dataPointsNascimentosPorSexoPorAno);
+            dataPointsNascimentosPorSexoPorAno = gsonObj.toJson(listaNascimentosPorAno4);
+            dataPoints.add(dataPointsNascimentosPorSexoPorAno);
+            dataPointsNascimentosPorSexoPorAno = gsonObj.toJson(listaNascimentosPorAno5);
+            dataPoints.add(dataPointsNascimentosPorSexoPorAno);
+            dataPointsNascimentosPorSexoPorAno = gsonObj.toJson(listaNascimentosPorAno6);
+            dataPoints.add(dataPointsNascimentosPorSexoPorAno);
         } catch (SQLException error) {
             logger.error("all catch: " + error);
         }

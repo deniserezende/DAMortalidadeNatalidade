@@ -7,15 +7,6 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%
-    List<String> qtdRegistrosPorAno = (List<String>) request.getAttribute("qtd_registros_por_ano");
-
-    String nascimentos = qtdRegistrosPorAno.get(0);
-    String obitos = qtdRegistrosPorAno.get(1);
-
-    System.out.println(qtdRegistrosPorAno);
-%>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -102,32 +93,208 @@
 
                 <script type="text/javascript">
                     window.onload = function() {
-                        var chartP = new CanvasJS.Chart("chartContainer2", {
-                            theme: "light2",
-                            title: {
-                                text: "Registros ao longo dos anos"
-                            },
-                            axisX: {
-                                title: "Ano"
-                            },
-                            axisY: {
-                                title: "Quantidade de registros",
-                                includeZero: true
-                            },
-                            data: [{
-                                type: "line",
-                                dataPoints : <%out.print(nascimentos);%>
-                            }]
-                        });
+                        var chart = new CanvasJS.Chart("CrescimentoPopulacional",
+                            {
+                                title:{
+                                    text: "Registros ao longo dos anos",
+                                    margin: 15
+                                },
+                                toolTip:{
+                                    shared: true
+                                },
+                                axisX: {
+                                    title: "Anos",
+                                },
+                                axisY:{
+                                    title: "Quantidade de mortes",
+                                    includeZero: true
+                                },
 
-                        chartP.render();
+                                legend:{
+                                    verticalAlign: "bottom",
+                                    horizontalAlign: "center"
+                                },
+                                data: [
+                                    {
+                                        type: "stackedArea",
+                                        name: "nascimentos",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                            List<String> qtdRegistrosPorAno = (List<String>) request.getAttribute("qtd_registros_por_ano");
+
+                                            String nascimentos = qtdRegistrosPorAno.get(0);
+
+
+                                            out.print(nascimentos);
+                                        %>
+                                    },
+                                    {
+                                        type: "stackedArea",
+                                        name: "obitos",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                            String obitos = qtdRegistrosPorAno.get(1);
+                                            out.print(obitos);
+                                        %>
+                                    }
+                                ]
+                            }
+                        );
+                        var chart2 = new CanvasJS.Chart("MortesPorRaca",
+                            {
+                                title:{
+                                    text: "Obitos por raça"
+                                },
+
+                                axisX: {
+                                    valueFormatString: "MMM",
+                                    interval: 1,
+                                    intervalType: "month"
+                                },
+
+                                data: [
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "branca",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        List<String> listaObitosPorRacaPorAno = (List<String>)request.getAttribute("listaObitosPorRacaPorAno");
+                                        String obito_raca_cor = listaObitosPorRacaPorAno.get(0);
+                                        out.print(obito_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "preta",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(1);
+                                        out.print(obito_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "amarela",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(2);
+                                        out.print(obito_raca_cor);
+                                %>
+                                    },
+
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "parda",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(3);
+                                        out.print(obito_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "indigena",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(4);
+                                        out.print(obito_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "não consta",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(5);
+                                        out.print(obito_raca_cor);
+                                %>
+                                    },
+                                ]
+                            }
+                        );
+                        var chart3 = new CanvasJS.Chart("NascimentosPorRaca",
+                            {
+                                title:{
+                                    text: "Nascimentos por raça"
+                                },
+
+                                axisX: {
+                                    valueFormatString: "MMM",
+                                    interval: 1,
+                                    intervalType: "month"
+                                },
+
+                                data: [
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "branca",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        List<String> listaNascimentosPorRacaPorAno = (List<String>)request.getAttribute("listaNascimentosPorRacaPorAno");
+                                        String nascimento_raca_cor = listaNascimentosPorRacaPorAno.get(0);
+                                        out.print(nascimento_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "preta",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        nascimento_raca_cor = listaNascimentosPorRacaPorAno.get(1);
+                                        out.print(nascimento_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "amarela",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        nascimento_raca_cor = listaNascimentosPorRacaPorAno.get(2);
+                                        out.print(nascimento_raca_cor);
+                                %>
+                                    },
+
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "parda",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        nascimento_raca_cor = listaNascimentosPorRacaPorAno.get(3);
+                                        out.print(nascimento_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "indigena",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        nascimento_raca_cor = listaNascimentosPorRacaPorAno.get(4);
+                                        out.print(nascimento_raca_cor);
+                                %>
+                                    },
+                                    {
+                                        type: "stackedBar",
+                                        legendText: "não consta",
+                                        showInLegend: "true",
+                                        dataPoints: <%
+                                        nascimento_raca_cor = listaNascimentosPorRacaPorAno.get(5);
+                                        out.print(nascimento_raca_cor);
+                                %>
+                                    },
+                                ]
+                            }
+                        );
+                        chart.render();
+                        chart2.render();
+                        chart3.render();
                     }
                 </script>
+                <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+                <div id="CrescimentoPopulacional" style="height: 300px; width: 100%;"></div>
+                <div id="MortesPorRaca" style="height: 300px; width: 100%;"></div>
+                <div id="NascimentosPorRaca" style="height: 300px; width: 100%;"></div>
             </div>
         </div>
-
-        <div id="chartContainer2" style="height: 370px; width: 50%; margin: auto;"></div>
-        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
         <!-- jQuery CDN - Slim version (=without AJAX) -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

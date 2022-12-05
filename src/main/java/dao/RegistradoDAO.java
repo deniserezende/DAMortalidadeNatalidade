@@ -1,9 +1,12 @@
 package dao;
 
+import com.google.gson.Gson;
 import model.Registrado;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 public interface RegistradoDAO extends DAO<Registrado> {
 
@@ -26,4 +29,7 @@ public interface RegistradoDAO extends DAO<Registrado> {
 
     public List<String> obitosPorRacaPorAno(String estado);
 
-    }
+    public List<String> obitosNaoNaturaisPorRacaPorAno(String estado);
+
+    public List<String> nascimentosPorRacaPorAno(String estado);
+}

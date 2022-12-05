@@ -101,9 +101,9 @@ public class CargaController extends HttpServlet{
                     List<String> listaObitosPorAno = registradoDao.obitosPorAno("");
 //                    request.setAttribute("estado", "");
                     request.setAttribute("listaObitosPorAno", listaObitosPorAno);
-                    List<String> listaObitosPorRacaPorAno = registradoDao.obitosPorRacaPorAno("");
+                    List<String> listaObitosNaoNaturaisPorRacaPorAno = registradoDao.obitosNaoNaturaisPorRacaPorAno("");
 //                    request.setAttribute("estado", "");
-                    request.setAttribute("listaObitosPorRacaPorAno", listaObitosPorRacaPorAno);
+                    request.setAttribute("listaObitosNaoNaturaisPorRacaPorAno", listaObitosNaoNaturaisPorRacaPorAno);
                     dispatcher = request.getRequestDispatcher("/view/relatorios/mortalidade.jsp");
                     dispatcher.forward(request, response);
                 }
@@ -117,11 +117,18 @@ public class CargaController extends HttpServlet{
             case "/relatoriosCrescimentoPopulacional": {
 
                 try(DAOFactory daoFactory = DAOFactory.getInstance()){
-
                     RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
-                    List<String> jsonRegistrosPorAno = registradoDao.qtdRegistrosPorAno();
 
+                    List<String> jsonRegistrosPorAno = registradoDao.qtdRegistrosPorAno();
                     request.setAttribute("qtd_registros_por_ano", jsonRegistrosPorAno);
+
+                    List<String> listaObitosPorRacaPorAno = registradoDao.obitosPorRacaPorAno("");
+//                    request.setAttribute("estado", "");
+                    request.setAttribute("listaObitosPorRacaPorAno", listaObitosPorRacaPorAno);
+
+                    List<String> listaNascimentosPorRacaPorAno = registradoDao.nascimentosPorRacaPorAno("");
+//                    request.setAttribute("estado", "");
+                    request.setAttribute("listaNascimentosPorRacaPorAno", listaNascimentosPorRacaPorAno);
 
                     dispatcher = request.getRequestDispatcher("/view/relatorios/crescimentoPopulacional.jsp");
                     dispatcher.forward(request, response);

@@ -93,7 +93,7 @@
 
         <script type="text/javascript">
             window.onload = function () {
-                var chart = new CanvasJS.Chart("chartContainer",
+                var chart = new CanvasJS.Chart("MortesNaoNaturaisPorRaca",
                     {
                         title:{
                             text: "Mortes não naturais"
@@ -111,8 +111,8 @@
                                 legendText: "branca",
                                 showInLegend: "true",
                                 dataPoints: <%
-                                        List<String> listaObitosPorRacaPorAno = (List<String>)request.getAttribute("listaObitosPorRacaPorAno");
-                                        String obito_raca_cor = listaObitosPorRacaPorAno.get(0);
+                                        List<String> listaObitosNaoNaturaisPorRacaPorAno = (List<String>)request.getAttribute("listaObitosNaoNaturaisPorRacaPorAno");
+                                        String obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(0);
                                         out.print(obito_raca_cor);
                                 %>
                             },
@@ -121,7 +121,7 @@
                                 legendText: "preta",
                                 showInLegend: "true",
                                 dataPoints: <%
-                                        obito_raca_cor = listaObitosPorRacaPorAno.get(1);
+                                        obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(1);
                                         out.print(obito_raca_cor);
                                 %>
                             },
@@ -130,7 +130,7 @@
                                 legendText: "amarela",
                                 showInLegend: "true",
                                 dataPoints: <%
-                                        obito_raca_cor = listaObitosPorRacaPorAno.get(2);
+                                        obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(2);
                                         out.print(obito_raca_cor);
                                 %>
                             },
@@ -140,7 +140,7 @@
                                 legendText: "parda",
                                 showInLegend: "true",
                                 dataPoints: <%
-                                        obito_raca_cor = listaObitosPorRacaPorAno.get(3);
+                                        obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(3);
                                         out.print(obito_raca_cor);
                                 %>
                             },
@@ -149,7 +149,7 @@
                                 legendText: "indigena",
                                 showInLegend: "true",
                                 dataPoints: <%
-                                        obito_raca_cor = listaObitosPorRacaPorAno.get(4);
+                                        obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(4);
                                         out.print(obito_raca_cor);
                                 %>
                             },
@@ -158,15 +158,14 @@
                                 legendText: "não consta",
                                 showInLegend: "true",
                                 dataPoints: <%
-                                        obito_raca_cor = listaObitosPorRacaPorAno.get(5);
+                                        obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(5);
                                         out.print(obito_raca_cor);
                                 %>
                             },
                         ]
                     }
                 );
-
-                var chart2 = new CanvasJS.Chart("chartContainer2",
+                var chart2 = new CanvasJS.Chart("MortesPorSexo",
                     {
                         title:{
                             text: "Mortes/sexo"
@@ -200,7 +199,7 @@
                         ]
                     }
                 );
-                var chart3 = new CanvasJS.Chart("chartContainer3",
+                var chart3 = new CanvasJS.Chart("MortesPorAno",
                     {
                         title:{
                             text: "Mortes por ano"
@@ -220,8 +219,6 @@
                                         List<String> listaObitosPorAno = (List<String>)request.getAttribute("listaObitosPorAno");
                                         String obito = listaObitosPorAno.get(0);
                                         out.print(obito);
-                                        System.out.println(listaObitosPorAno);
-                                        System.out.println(obito);
                                 %>
                             }
                         ]
@@ -233,9 +230,9 @@
             }
         </script>
 
-        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-        <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
-        <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+        <div id="MortesNaoNaturaisPorRaca" style="height: 300px; width: 100%;"></div>
+        <div id="MortesPorSexo" style="height: 300px; width: 100%;"></div>
+        <div id="MortesPorAno" style="height: 300px; width: 100%;"></div>
 
     </div>
 </div>
