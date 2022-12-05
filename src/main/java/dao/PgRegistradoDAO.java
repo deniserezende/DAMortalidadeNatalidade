@@ -149,7 +149,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "GROUP BY ano_registro, tipo_registro, raca_cor\n" +
                     "ORDER BY ano_registro;";
 
-
     public PgRegistradoDAO(Connection connection) {
         this.connection = connection;
     }
@@ -259,7 +258,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
     }
 
-    // TODO colocar uma transação no create (?)
     @Override
     public void create(Registrado registrado){
         if(registrado.getObito() != null){
@@ -578,7 +576,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
         return registradoList;
     }
 
-    //TODO implementar o all_obito igual o all_nascimento
     @Override
     public List<Registrado> all_obito() {
         List<Registrado> registradoList = new ArrayList<>();
@@ -667,7 +664,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
     }
 
     public List<String> idadesMaesPorAno(String estado){
-
         List<String> dataPoints = new ArrayList<>();
         Gson gsonObj = new Gson();
         Map<Object,Object> map;
