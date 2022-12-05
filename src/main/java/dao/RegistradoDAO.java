@@ -19,4 +19,8 @@ public interface RegistradoDAO extends DAO<Registrado> {
     public List<String> qtdRegistrosPorAno();
 
     public List<String> idadesMaesPorAno(String estado);
-}
+
+    public List<String> obitosPorSexoPorAno(String estado);
+
+    public List<String> obitosPorAno(String estado);
+    }
