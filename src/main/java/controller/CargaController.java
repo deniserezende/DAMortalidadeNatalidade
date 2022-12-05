@@ -79,7 +79,8 @@ public class CargaController extends HttpServlet{
             case "/relatoriosNatalidade": {
                 try(DAOFactory daoFactory = DAOFactory.getInstance()){
                     RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
-                    List<String> listaIdadesMaes = registradoDao.idadesMaesPorAno();
+                    List<String> listaIdadesMaes = registradoDao.idadesMaesPorAno("");
+                    request.setAttribute("estado", "");
                     request.setAttribute("listaIdadesMaes", listaIdadesMaes);
                     dispatcher = request.getRequestDispatcher("/view/relatorios/natalidade.jsp");
                     dispatcher.forward(request, response);

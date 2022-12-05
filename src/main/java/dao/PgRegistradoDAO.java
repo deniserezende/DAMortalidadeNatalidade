@@ -639,7 +639,7 @@ public class PgRegistradoDAO implements RegistradoDAO {
         return dataPoints;
     }
 
-    public List<String> idadesMaesPorAno(){
+    public List<String> idadesMaesPorAno(String estado){
 
         List<String> dataPoints = new ArrayList<>();
         Gson gsonObj = new Gson();
