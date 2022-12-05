@@ -110,68 +110,58 @@
                                 type: "stackedBar",
                                 legendText: "branca",
                                 showInLegend: "true",
-                                dataPoints: [
-                                    { x: new Date(2012, 0o1, 1), y: 71 },
-                                    { x: new Date(2012, 0o2, 1), y: 55},
-                                    { x: new Date(2012, 0o3, 1), y: 50 },
-                                    { x: new Date(2012, 0o4, 1), y: 65 },
-                                    { x: new Date(2012, 0o5, 1), y: 95 }
-
-                                ]
+                                dataPoints: <%
+                                        List<String> listaObitosPorRacaPorAno = (List<String>)request.getAttribute("listaObitosPorRacaPorAno");
+                                        String obito_raca_cor = listaObitosPorRacaPorAno.get(0);
+                                        out.print(obito_raca_cor);
+                                %>
                             },
                             {
                                 type: "stackedBar",
                                 legendText: "preta",
                                 showInLegend: "true",
-                                dataPoints: [
-                                    { x: new Date(2012, 0o1, 1), y: 71 },
-                                    { x: new Date(2012, 0o2, 1), y: 55},
-                                    { x: new Date(2012, 0o3, 1), y: 50 },
-                                    { x: new Date(2012, 0o4, 1), y: 65 },
-                                    { x: new Date(2012, 0o5, 1), y: 95 }
-
-                                ]
+                                dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(1);
+                                        out.print(obito_raca_cor);
+                                %>
                             },
                             {
                                 type: "stackedBar",
                                 legendText: "amarela",
                                 showInLegend: "true",
-                                dataPoints: [
-                                    { x: new Date(2012, 0o1, 1), y: 71 },
-                                    { x: new Date(2012, 0o2, 1), y: 55},
-                                    { x: new Date(2012, 0o3, 1), y: 50 },
-                                    { x: new Date(2012, 0o4, 1), y: 65 },
-                                    { x: new Date(2012, 0o5, 1), y: 95 }
-
-                                ]
+                                dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(2);
+                                        out.print(obito_raca_cor);
+                                %>
                             },
 
                             {
                                 type: "stackedBar",
                                 legendText: "parda",
                                 showInLegend: "true",
-                                dataPoints: [
-                                    { x: new Date(2012, 0o1, 1), y: 61 },
-                                    { x: new Date(2012, 0o2, 1), y: 75},
-                                    { x: new Date(2012, 0o3, 1), y: 80 },
-                                    { x: new Date(2012, 0o4, 1), y: 85 },
-                                    { x: new Date(2012, 0o5, 1), y: 105 }
-
-                                ]
+                                dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(3);
+                                        out.print(obito_raca_cor);
+                                %>
                             },
                             {
                                 type: "stackedBar",
                                 legendText: "indigena",
                                 showInLegend: "true",
-                                dataPoints: [
-                                    { x: new Date(2012, 0o1, 1), y: 20 },
-                                    { x: new Date(2012, 0o2, 1), y: 35},
-                                    { x: new Date(2012, 0o3, 1), y: 30 },
-                                    { x: new Date(2012, 0o4, 1), y: 45 },
-                                    { x: new Date(2012, 0o5, 1), y: 25 }
-
-                                ]
-                            }
+                                dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(4);
+                                        out.print(obito_raca_cor);
+                                %>
+                            },
+                            {
+                                type: "stackedBar",
+                                legendText: "não consta",
+                                showInLegend: "true",
+                                dataPoints: <%
+                                        obito_raca_cor = listaObitosPorRacaPorAno.get(5);
+                                        out.print(obito_raca_cor);
+                                %>
+                            },
                         ]
                     }
                 );
@@ -192,7 +182,6 @@
                                 legendText: "Homens",
                                 color: "rgba(54,158,173,1)",
                                 dataPoints: <%
-                                        String estado = (String)request.getAttribute("estado");
                                         List<String> listaObitosPorSexoPorAno = (List<String>)request.getAttribute("listaObitosPorSexoPorAno");
                                         String obito_masculino = listaObitosPorSexoPorAno.get(0);
                                         out.print(obito_masculino);
@@ -228,7 +217,6 @@
                                 markerSize: 5,
                                 color: "rgba(54,158,173,.7)",
                                 dataPoints: <%
-                                        estado = (String)request.getAttribute("estado");
                                         List<String> listaObitosPorAno = (List<String>)request.getAttribute("listaObitosPorAno");
                                         String obito = listaObitosPorAno.get(0);
                                         out.print(obito);

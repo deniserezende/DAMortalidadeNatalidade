@@ -96,11 +96,14 @@ public class CargaController extends HttpServlet{
                 try(DAOFactory daoFactory = DAOFactory.getInstance()){
                     RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
                     List<String> listaObitosPorSexoPorAno = registradoDao.obitosPorSexoPorAno("");
-                    request.setAttribute("estado", "");
+//                    request.setAttribute("estado", "");
                     request.setAttribute("listaObitosPorSexoPorAno", listaObitosPorSexoPorAno);
                     List<String> listaObitosPorAno = registradoDao.obitosPorAno("");
-                    request.setAttribute("estado", "");
+//                    request.setAttribute("estado", "");
                     request.setAttribute("listaObitosPorAno", listaObitosPorAno);
+                    List<String> listaObitosPorRacaPorAno = registradoDao.obitosPorRacaPorAno("");
+//                    request.setAttribute("estado", "");
+                    request.setAttribute("listaObitosPorRacaPorAno", listaObitosPorRacaPorAno);
                     dispatcher = request.getRequestDispatcher("/view/relatorios/mortalidade.jsp");
                     dispatcher.forward(request, response);
                 }
