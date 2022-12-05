@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: laura
   Date: 25/11/2022
@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!DOCTYPE html>
 <html>
 
@@ -89,8 +90,169 @@
         </nav>
 
         <h2 title="RelatoriosMortalidade">Relatórios de Mortalidade no Brasil</h2>
+
+        <script type="text/javascript">
+            window.onload = function () {
+                var chart = new CanvasJS.Chart("chartContainer",
+                    {
+                        title:{
+                            text: "Mortes não naturais"
+                        },
+
+                        axisX: {
+                            valueFormatString: "MMM",
+                            interval: 1,
+                            intervalType: "month"
+                        },
+
+                        data: [
+                            {
+                                type: "stackedBar",
+                                legendText: "branca",
+                                showInLegend: "true",
+                                dataPoints: [
+                                    { x: new Date(2012, 0o1, 1), y: 71 },
+                                    { x: new Date(2012, 0o2, 1), y: 55},
+                                    { x: new Date(2012, 0o3, 1), y: 50 },
+                                    { x: new Date(2012, 0o4, 1), y: 65 },
+                                    { x: new Date(2012, 0o5, 1), y: 95 }
+
+                                ]
+                            },
+                            {
+                                type: "stackedBar",
+                                legendText: "preta",
+                                showInLegend: "true",
+                                dataPoints: [
+                                    { x: new Date(2012, 0o1, 1), y: 71 },
+                                    { x: new Date(2012, 0o2, 1), y: 55},
+                                    { x: new Date(2012, 0o3, 1), y: 50 },
+                                    { x: new Date(2012, 0o4, 1), y: 65 },
+                                    { x: new Date(2012, 0o5, 1), y: 95 }
+
+                                ]
+                            },
+                            {
+                                type: "stackedBar",
+                                legendText: "amarela",
+                                showInLegend: "true",
+                                dataPoints: [
+                                    { x: new Date(2012, 0o1, 1), y: 71 },
+                                    { x: new Date(2012, 0o2, 1), y: 55},
+                                    { x: new Date(2012, 0o3, 1), y: 50 },
+                                    { x: new Date(2012, 0o4, 1), y: 65 },
+                                    { x: new Date(2012, 0o5, 1), y: 95 }
+
+                                ]
+                            },
+
+                            {
+                                type: "stackedBar",
+                                legendText: "parda",
+                                showInLegend: "true",
+                                dataPoints: [
+                                    { x: new Date(2012, 0o1, 1), y: 61 },
+                                    { x: new Date(2012, 0o2, 1), y: 75},
+                                    { x: new Date(2012, 0o3, 1), y: 80 },
+                                    { x: new Date(2012, 0o4, 1), y: 85 },
+                                    { x: new Date(2012, 0o5, 1), y: 105 }
+
+                                ]
+                            },
+                            {
+                                type: "stackedBar",
+                                legendText: "indigena",
+                                showInLegend: "true",
+                                dataPoints: [
+                                    { x: new Date(2012, 0o1, 1), y: 20 },
+                                    { x: new Date(2012, 0o2, 1), y: 35},
+                                    { x: new Date(2012, 0o3, 1), y: 30 },
+                                    { x: new Date(2012, 0o4, 1), y: 45 },
+                                    { x: new Date(2012, 0o5, 1), y: 25 }
+
+                                ]
+                            }
+                        ]
+                    }
+                );
+
+                var chart2 = new CanvasJS.Chart("chartContainer2",
+                    {
+                        title:{
+                            text: "Mortes/sexo"
+                        },
+                        axisY: {
+                            title: "Quantidade de mortes",
+                            includeZero: true
+                        },
+                        data: [
+                            {
+                                type: "bar",
+                                showInLegend: true,
+                                legendText: "Homens",
+                                color: "rgba(54,158,173,1)",
+                                dataPoints: <%
+                                        String estado = (String)request.getAttribute("estado");
+                                        List<String> listaObitosPorSexoPorAno = (List<String>)request.getAttribute("listaObitosPorSexoPorAno");
+                                        String obito_masculino = listaObitosPorSexoPorAno.get(0);
+                                        out.print(obito_masculino);
+                                %>
+                            },
+                            {
+                                type: "bar",
+                                showInLegend: true,
+                                legendText: "Mulheres",
+                                color: "pink",
+                                dataPoints: <%
+                                        String obito_feminino = listaObitosPorSexoPorAno.get(1);
+                                        out.print(obito_feminino);
+                                %>
+                            },
+                        ]
+                    }
+                );
+                var chart3 = new CanvasJS.Chart("chartContainer3",
+                    {
+                        title:{
+                            text: "Mortes por ano"
+                        },
+                        axisY: {
+                            title: "Quantidade",
+                            includeZero: true
+                        },
+                        data: [
+                            {
+                                type: "splineArea",
+                                showInLegend: true,
+                                legendText: "Anos",
+                                markerSize: 5,
+                                color: "rgba(54,158,173,.7)",
+                                dataPoints: <%
+                                        estado = (String)request.getAttribute("estado");
+                                        List<String> listaObitosPorAno = (List<String>)request.getAttribute("listaObitosPorAno");
+                                        String obito = listaObitosPorAno.get(0);
+                                        out.print(obito);
+                                        System.out.println(listaObitosPorAno);
+                                        System.out.println(obito);
+                                %>
+                            }
+                        ]
+                    }
+                );
+                chart.render();
+                chart2.render();
+                chart3.render();
+            }
+        </script>
+
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+        <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+
     </div>
 </div>
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -109,3 +271,4 @@
 </script>
 </body>
 </html>
+

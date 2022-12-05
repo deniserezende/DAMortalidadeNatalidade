@@ -79,7 +79,8 @@ public class CargaController extends HttpServlet{
             case "/relatoriosNatalidade": {
                 try(DAOFactory daoFactory = DAOFactory.getInstance()){
                     RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
-                    List<String> listaIdadesMaes = registradoDao.idadesMaesPorAno();
+                    List<String> listaIdadesMaes = registradoDao.idadesMaesPorAno("");
+                    request.setAttribute("estado", "");
                     request.setAttribute("listaIdadesMaes", listaIdadesMaes);
                     dispatcher = request.getRequestDispatcher("/view/relatorios/natalidade.jsp");
                     dispatcher.forward(request, response);
@@ -92,8 +93,22 @@ public class CargaController extends HttpServlet{
                 break;
             }
             case "/relatoriosMortalidade": {
-                dispatcher = request.getRequestDispatcher("/view/relatorios/mortalidade.jsp");
-                dispatcher.forward(request, response);
+                try(DAOFactory daoFactory = DAOFactory.getInstance()){
+                    RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
+                    List<String> listaObitosPorSexoPorAno = registradoDao.obitosPorSexoPorAno("");
+                    request.setAttribute("estado", "");
+                    request.setAttribute("listaObitosPorSexoPorAno", listaObitosPorSexoPorAno);
+                    List<String> listaObitosPorAno = registradoDao.obitosPorAno("");
+                    request.setAttribute("estado", "");
+                    request.setAttribute("listaObitosPorAno", listaObitosPorAno);
+                    dispatcher = request.getRequestDispatcher("/view/relatorios/mortalidade.jsp");
+                    dispatcher.forward(request, response);
+                }
+                catch(Exception error) {
+                    logger.error("ParseException catch: " + error);
+                    request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
+                    response.sendRedirect(request.getContextPath() + servletPath);
+                }
                 break;
             }
             case "/relatoriosCrescimentoPopulacional": {
