@@ -96,7 +96,8 @@
         </nav>
 
         <h2 title="RelatoriosMortalidade">Relatórios de Mortalidade no Brasil</h2>
-            <script type="text/javascript">
+
+        <script type="text/javascript">
             window.onload = function () {
                 var chart = new CanvasJS.Chart("chartContainer",
                     {
@@ -177,114 +178,106 @@
 
                                 ]
                             }
-
                         ]
-                    });
+                    }
+                );
 
+                var chart2 = new CanvasJS.Chart("chartContainer2",
+                    {
+                        title:{
+                            text: "Mortes/sexo"
+                        },
+                        axisY: {
+                            title: "Medals won",
+                            maximum: 1010
+                        },
+                        data: [
+                            {
+                                type: "bar",
+                                showInLegend: true,
+                                legendText: "Homens",
+                                color: "gold",
+                                dataPoints: [
+                                    { y: 198, label: "Italy"},
+                                    { y: 201, label: "China"},
+                                    { y: 202, label: "France"},
+                                    { y: 236, label: "Great Britain"},
+                                    { y: 395, label: "Soviet Union"},
+                                    { y: 957, label: "USA"}
+                                ]
+                            },
+                            {
+                                type: "bar",
+                                showInLegend: true,
+                                legendText: "Mulheres",
+                                color: "silver",
+                                dataPoints: [
+                                    { y: 166, label: "Italy"},
+                                    { y: 144, label: "China"},
+                                    { y: 223, label: "France"},
+                                    { y: 272, label: "Great Britain"},
+                                    { y: 319, label: "Soviet Union"},
+                                    { y: 759, label: "USA"}
+                                ]
+                            },
+                        ]
+                    }
+                );
+                var chart3 = new CanvasJS.Chart("chartContainer3",
+                    {
+                        title:{
+                            text: "Spline Area Chart"
+                        },
+                        axisY: {
+                            title: "Units Sold",
+                            valueFormatString: "#0,,.",
+                            suffix: " m"
+                        },
+                        data: [
+                            {
+                                toolTipContent: "{y} units",
+                                type: "splineArea",
+                                showInLegend: true,
+                                legendText: "source: Nielsen SoundScan",
+                                markerSize: 5,
+                                color: "rgba(54,158,173,.7)",
+                                dataPoints: [
+                                    {x: new Date(1992,0), y: 2506000},
+                                    {x: new Date(1993,0), y: 2798000},
+                                    {x: new Date(1994,0), y: 3386000},
+                                    {x: new Date(1995,0), y: 6944000},
+                                    {x: new Date(1996,0), y: 6026000},
+                                    {x: new Date(1997,0), y: 2394000},
+                                    {x: new Date(1998,0), y: 1872000},
+                                    {x: new Date(1999,0), y: 2140000},
+                                    {x: new Date(2000,0), y: 7289000, indexLabel: "highest"},
+                                    {x: new Date(2001,0), y: 4830000},
+                                    {x: new Date(2002,0), y: 2009000},
+                                    {x: new Date(2003,0), y: 2840000},
+                                    {x: new Date(2004,0), y: 2396000},
+                                    {x: new Date(2005,0), y: 1613000},
+                                    {x: new Date(2006,0), y: 2821000},
+                                    {x: new Date(2007,0), y: 2000000},
+                                    {x: new Date(2008,0), y: 1397000}
+                                ]
+                            }
+                        ]
+                    }
+                );
                 chart.render();
+                chart2.render();
+                chart3.render();
             }
-            </script>
-            <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script></head>
-            <script type="text/javascript">
-                window.onload = function () {
-                    var chart2 = new CanvasJS.Chart("chartContainer2",
-                        {
-                            title:{
-                                text: "Mortes/sexo"
-                            },
-                            axisY: {
-                                title: "Medals won",
-                                maximum: 1010
-                            },
-                            data: [
-                                {
-                                    type: "bar",
-                                    showInLegend: true,
-                                    legendText: "Homens",
-                                    color: "gold",
-                                    dataPoints: [
-                                        { y: 198, label: "Italy"},
-                                        { y: 201, label: "China"},
-                                        { y: 202, label: "France"},
-                                        { y: 236, label: "Great Britain"},
-                                        { y: 395, label: "Soviet Union"},
-                                        { y: 957, label: "USA"}
-                                    ]
-                                },
-                                {
-                                    type: "bar",
-                                    showInLegend: true,
-                                    legendText: "Mulheres",
-                                    color: "silver",
-                                    dataPoints: [
-                                        { y: 166, label: "Italy"},
-                                        { y: 144, label: "China"},
-                                        { y: 223, label: "France"},
-                                        { y: 272, label: "Great Britain"},
-                                        { y: 319, label: "Soviet Union"},
-                                        { y: 759, label: "USA"}
-                                    ]
-                                },
-                            ]
-                        });
-                    chart2.render();
-                }
-            </script>
-            <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script></head>
-            <script type="text/javascript">
-                window.onload = function () {
-                    var chart3 = new CanvasJS.Chart("chartContainer3",
-                        {
-                            title:{
-                                text: "Spline Area Chart"
-                            },
-                            axisY: {
-                                title: "Units Sold",
-                                valueFormatString: "#0,,.",
-                                suffix: " m"
-                            },
-                            data: [
-                                {
-                                    toolTipContent: "{y} units",
-                                    type: "splineArea",
-                                    showInLegend: true,
-                                    legendText: "source: Nielsen SoundScan",
-                                    markerSize: 5,
-                                    color: "rgba(54,158,173,.7)",
-                                    dataPoints: [
-                                        {x: new Date(1992,0), y: 2506000},
-                                        {x: new Date(1993,0), y: 2798000},
-                                        {x: new Date(1994,0), y: 3386000},
-                                        {x: new Date(1995,0), y: 6944000},
-                                        {x: new Date(1996,0), y: 6026000},
-                                        {x: new Date(1997,0), y: 2394000},
-                                        {x: new Date(1998,0), y: 1872000},
-                                        {x: new Date(1999,0), y: 2140000},
-                                        {x: new Date(2000,0), y: 7289000, indexLabel: "highest"},
-                                        {x: new Date(2001,0), y: 4830000},
-                                        {x: new Date(2002,0), y: 2009000},
-                                        {x: new Date(2003,0), y: 2840000},
-                                        {x: new Date(2004,0), y: 2396000},
-                                        {x: new Date(2005,0), y: 1613000},
-                                        {x: new Date(2006,0), y: 2821000},
-                                        {x: new Date(2007,0), y: 2000000},
-                                        {x: new Date(2008,0), y: 1397000}
-                                    ]
-                                }
-                            ]
-                        });
+        </script>
 
-                    chart3.render();
-                }
-            </script>
-        <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-        <body>
-            <div id="chartContainer" style="height: 300px; width: 100%;"></div><br/>
-            <div id="chartContainer2" style="height: 300px; width: 100%;"></div><br/>
-            <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
-        </body>
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+        <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+
     </div>
 </div>
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 <!-- jQuery CDN - Slim version (=without AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
