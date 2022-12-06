@@ -93,9 +93,9 @@
 
     <script type="text/javascript">
       window.onload = function () {
-        var chart = new CanvasJS.Chart("MortesNaoNaturaisPorRaca",
+        const chart = new CanvasJS.Chart("MortesNaoNaturaisPorRaca",
                 {
-                  title:{
+                  title: {
                     text: "Mortes não naturais"
                   },
                   axisX: {
@@ -162,9 +162,9 @@
                   ]
                 }
         );
-        var chart2 = new CanvasJS.Chart("MortesPorSexo",
+        const chart2 = new CanvasJS.Chart("MortesPorSexo",
                 {
-                  title:{
+                  title: {
                     text: "Mortes/sexo"
                   },
                   axisY: {
@@ -196,9 +196,9 @@
                   ]
                 }
         );
-        var chart3 = new CanvasJS.Chart("MortesPorAno",
+        const chart3 = new CanvasJS.Chart("MortesPorAno",
                 {
-                  title:{
+                  title: {
                     text: "Mortes por ano"
                   },
                   axisY: {
