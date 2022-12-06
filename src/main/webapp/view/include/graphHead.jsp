@@ -5,8 +5,7 @@
   Time: 17:34
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="java.util.*" %>
-<%@ page import="model.Registrado" %>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="com.google.gson.Gson"%>
-<%@ page import="com.google.gson.JsonObject"%>
+<%@ page import="java.util.List" %>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

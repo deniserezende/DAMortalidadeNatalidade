@@ -19,7 +19,6 @@ public class PgCargaDAO implements CargaDAO {
             "INSERT INTO \"DAMortalidade_Natalidade\".\"CARGA\"(data_carga, hora_carga, responsavel, email, " +
                     "nome_arquivo, tipo_carga, titulo_carga) " +
                     "VALUES(?, ?, ?, ?, ?, ?, ?);";
-//    "VALUES(to_date(?, 'ddmmyyyy'), ?, ?, ?, ?, ?);";
 
     private static final String READ_QUERY =
             "SELECT * FROM \"DAMortalidade_Natalidade\".\"CARGA\"" +
@@ -38,7 +37,7 @@ public class PgCargaDAO implements CargaDAO {
     }
 
     @Override
-    public void create(Carga carga) throws SQLException {
+    public void create(Carga carga){
         try (PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
             statement.setDate(1, carga.getData_carga());
             statement.setTime(2, carga.getHora_carga());
@@ -55,7 +54,7 @@ public class PgCargaDAO implements CargaDAO {
     }
 
     @Override
-    public Carga read(Integer id) throws SQLException {
+    public Carga read(Integer id){
         Carga carga = new Carga();
         try (PreparedStatement statement = connection.prepareStatement(READ_QUERY)) {
             statement.setInt(1, id);
@@ -83,11 +82,11 @@ public class PgCargaDAO implements CargaDAO {
     }
 
     @Override
-    public void update(Carga carga) throws SQLException {
+    public void update(Carga carga){
     }
 
     @Override
-    public void delete(Integer id) throws SQLException {
+    public void delete(Integer id){
         Carga carga = read(id);
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setInt(1, id);

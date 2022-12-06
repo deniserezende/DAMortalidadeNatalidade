@@ -20,7 +20,7 @@ public class PgDAOFactory extends DAOFactory {
 
     // TODO why do I have to implement this:
     @Override
-    public void close() throws Exception {
+    public void close(){
 
     }
 }

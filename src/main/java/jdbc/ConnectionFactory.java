@@ -52,7 +52,6 @@ public abstract class ConnectionFactory {
         return instance;
     }
 
-    // @return the dbServer
     public static String getDbServer() {
         return dbServer;
     }
