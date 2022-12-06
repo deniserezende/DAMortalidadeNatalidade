@@ -28,4 +28,6 @@ public interface RegistradoDAO extends DAO<Registrado> {
 
     public List<String> nascimentosPorRacaPorAno(String estado);
 
-}
+    public List<String> nascimentoPorSexoPorAno(String estado);
+
+    }

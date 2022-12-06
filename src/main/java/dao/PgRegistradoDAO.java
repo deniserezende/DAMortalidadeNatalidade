@@ -130,6 +130,16 @@ public class PgRegistradoDAO implements RegistradoDAO {
                     "GROUP BY ano_registro, tipo_registro, sexo\n" +
                     "ORDER BY ano_registro;";
 
+    private static final String NASCIMENTOS_POR_SEXO_POR_ANO =
+            "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro, sexo \n" +
+                    "FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"NASCIMENTO\", \"DAMortalidade_Natalidade\".\"SEXO\"\n" +
+                    "WHERE \"DAMortalidade_Natalidade\".\"NASCIMENTO\".id_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".id_registro_nasc\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".tipo_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".tipo_registro_nasc\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"NASCIMENTO\".ano_registro = \"DAMortalidade_Natalidade\".\"REGISTRADO\".ano_registro_nasc\n" +
+                    "\tAND \"DAMortalidade_Natalidade\".\"SEXO\".cod_sexo = \"DAMortalidade_Natalidade\".\"REGISTRADO\".cod_sexo\n" +
+                    "GROUP BY ano_registro, tipo_registro, sexo\n" +
+                    "ORDER BY ano_registro;";
+
     private static final String OBITOS_POR_ANO =
             "SELECT COUNT(id_registro) AS qtd_registros, ano_registro, tipo_registro \n" +
                     "FROM \"DAMortalidade_Natalidade\".\"REGISTRADO\", \"DAMortalidade_Natalidade\".\"OBITO\"\n" +
@@ -758,6 +768,42 @@ public class PgRegistradoDAO implements RegistradoDAO {
         }
         return dataPoints;
     }
+
+    public List<String> nascimentoPorSexoPorAno(String estado){
+
+        List<String> dataPoints = new ArrayList<>();
+        Gson gsonObj = new Gson();
+        Map<Object,Object> map;
+        List<Map<Object,Object>> listaNascimentoPorSexoPorAnoF = new ArrayList<Map<Object,Object>>();
+        List<Map<Object,Object>> listaNascimentoPorSexoPorAnoM = new ArrayList<Map<Object,Object>>();
+
+        try (PreparedStatement statement = connection.prepareStatement(NASCIMENTOS_POR_SEXO_POR_ANO);
+             ResultSet result = statement.executeQuery()) {
+            while(result.next()) {
+                if(Objects.equals(result.getString("sexo"), "masculino")){
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+                    listaNascimentoPorSexoPorAnoM.add(map);
+                }
+                else{
+                    map = new HashMap<Object,Object>();
+                    map.put("label", result.getInt("ano_registro"));
+                    map.put("y", result.getInt("qtd_registros"));
+                    listaNascimentoPorSexoPorAnoF.add(map);
+                }
+            }
+            String dataPointsObitosPorSexoPorAnoTwo = gsonObj.toJson(listaNascimentoPorSexoPorAnoM);
+            String dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaNascimentoPorSexoPorAnoF);
+            dataPoints.add(dataPointsObitosPorSexoPorAnoTwo);
+            dataPoints.add(dataPointsObitosPorSexoPorAno);
+        } catch (SQLException error) {
+            logger.error("all catch: " + error);
+        }
+
+        return dataPoints;
+    }
+
 
     public List<String> obitosPorSexoPorAno(String estado){
 

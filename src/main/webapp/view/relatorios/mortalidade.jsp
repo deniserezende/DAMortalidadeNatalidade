@@ -183,7 +183,7 @@
                     {
                       type: "bar",
                       showInLegend: true,
-                      legendText: "Homens",
+                      legendText: "Masculino",
                       color: "rgba(54,158,173,1)",
                       dataPoints: <%
                                         List<String> listaObitosPorSexoPorAno = (List<String>)request.getAttribute("listaObitosPorSexoPorAno");
@@ -194,7 +194,7 @@
                     {
                       type: "bar",
                       showInLegend: true,
-                      legendText: "Mulheres",
+                      legendText: "Feminino",
                       color: "pink",
                       dataPoints: <%
                                         String obito_feminino = listaObitosPorSexoPorAno.get(1);

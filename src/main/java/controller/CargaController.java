@@ -81,6 +81,8 @@ public class CargaController extends HttpServlet{
                     RegistradoDAO registradoDao = daoFactory.getRegistradoDAO();
                     List<String> listaIdadesMaes = registradoDao.idadesMaesPorAno();
                     request.setAttribute("listaIdadesMaes", listaIdadesMaes);
+                    List<String> listaNascimentosPorSexoPorAno = registradoDao.nascimentoPorSexoPorAno("");
+                    request.setAttribute("listaNascimentosPorSexoPorAno", listaNascimentosPorSexoPorAno);
                     List<String> listaTipoParto = registradoDao.qtdTipoParto();
                     request.setAttribute("qtdTipoParto", listaTipoParto);
                     System.out.println(listaTipoParto);

@@ -143,6 +143,41 @@
             }
           }
         });
+        var graficoNascimentosPorSexo = new CanvasJS.Chart("NascimentosPorSexo",
+                {
+                  title: {
+                    text: "Nascimentos por sexo"
+                  },
+                  backgroundColor: "#fafafa",
+                  axisY: {
+                    title: "Quantidade de registros de nascimentos",
+                    includeZero: true
+                  },
+                  data: [
+                    {
+                      type: "bar",
+                      showInLegend: true,
+                      legendText: "Masculino",
+                      color: "rgba(54,158,173,1)",
+                      dataPoints: <%
+                                        List<String> listaNascimentosPorSexoPorAno = (List<String>)request.getAttribute("listaNascimentosPorSexoPorAno");
+                                        String nascimento_masculino = listaNascimentosPorSexoPorAno.get(0);
+                                        out.print(nascimento_masculino);
+                                %>
+                    },
+                    {
+                      type: "bar",
+                      showInLegend: true,
+                      legendText: "Feminino",
+                      color: "pink",
+                      dataPoints: <%
+                                        String nascimento_feminino = listaNascimentosPorSexoPorAno.get(1);
+                                        out.print(nascimento_feminino);
+                                %>
+                    },
+                  ]
+                }
+        );
         var graficoTipoParto = new CanvasJS.Chart("graficoTipoParto", {
           animationEnabled: true,
           title:{
@@ -161,11 +196,14 @@
           }]
         });
         graficoIdadeMae.render();
+        graficoNascimentosPorSexo.render()
         graficoTipoParto.render();
       }
     </script>
     <br/>
     <div id="idadeMaesPorAno" style="height: 300px; width: 100%;"></div>
+    <br/>
+    <div id="NascimentosPorSexo" style="height: 300px; width: 100%;"></div>
     <br/>
     <div id="graficoTipoParto" style="height: 300px; width: 100%;"></div>
   </div>
