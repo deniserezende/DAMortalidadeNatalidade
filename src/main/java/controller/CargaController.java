@@ -220,9 +220,7 @@ public class CargaController extends HttpServlet{
                                     break;
                                 case "separador_csv":
                                     separator = fieldValue;
-                                    // TODO tratar o separador do CSV aqui
-                                    //recebemos o separador do CSV aqui
-                                    logger.error("Separador de CSV informado: " + fieldValue);
+                                    logger.info("Separador de CSV informado: " + fieldValue);
                                     break;
                             }
                             /* Inserting Date in Carga */

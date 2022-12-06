@@ -511,7 +511,6 @@ public class PgRegistradoDAO implements RegistradoDAO {
         update_registrado(registrado);
     }
 
-    // TODO delete não testado
     public void delete_nascimento(Registrado registrado){
         try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY_NASC)) {
             statement.setInt(1, registrado.getId_registrado());

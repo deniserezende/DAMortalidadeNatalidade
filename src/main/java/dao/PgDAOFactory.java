@@ -18,7 +18,6 @@ public class PgDAOFactory extends DAOFactory {
         return new PgRegistradoDAO(this.connection);
     }
 
-    // TODO why do I have to implement this:
     @Override
     public void close(){
 
