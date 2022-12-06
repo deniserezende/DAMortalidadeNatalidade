@@ -96,13 +96,15 @@
         const chart = new CanvasJS.Chart("MortesNaoNaturaisPorRaca",
                 {
                   title: {
-                    text: "Mortes não naturais"
+                    text: "Obitos não naturais"
                   },
                   backgroundColor: "#fafafa",
                   axisX: {
-                    valueFormatString: "MMM",
-                    interval: 1,
-                    intervalType: "month"
+                    includeZero: true
+                  },
+                  axisY: {
+                    title: "Quantidade de registros de obitos",
+                    includeZero: true
                   },
                   data: [
                     {
@@ -111,6 +113,7 @@
                       showInLegend: "true",
                       dataPoints: <%
                                         List<String> listaObitosNaoNaturaisPorRacaPorAno = (List<String>)request.getAttribute("listaObitosNaoNaturaisPorRacaPorAno");
+                                        System.out.println(listaObitosNaoNaturaisPorRacaPorAno);
                                         String obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(0);
                                         out.print(obito_raca_cor);
                                 %>
