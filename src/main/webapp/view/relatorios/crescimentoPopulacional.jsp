@@ -144,9 +144,8 @@
                   },
                   backgroundColor: "#fafafa",
                   axisX: {
-                    valueFormatString: "MMM",
-                    interval: 1,
-                    intervalType: "month"
+                    valueFormatString: "####",
+                    interval: 1
                   },
                   data: [
                     {
@@ -214,9 +213,8 @@
                   },
                   backgroundColor: "#fafafa",
                   axisX: {
-                    valueFormatString: "MMM",
-                    interval: 1,
-                    intervalType: "month"
+                    valueFormatString: "####",
+                    interval: 1
                   },
                   data: [
                     {

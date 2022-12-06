@@ -100,7 +100,8 @@
                   },
                   backgroundColor: "#fafafa",
                   axisX: {
-                    includeZero: true
+                    valueFormatString: "####",
+                    interval: 1
                   },
                   axisY: {
                     title: "Quantidade de registros de obitos",
@@ -115,6 +116,8 @@
                                         List<String> listaObitosNaoNaturaisPorRacaPorAno = (List<String>)request.getAttribute("listaObitosNaoNaturaisPorRacaPorAno");
                                         System.out.println(listaObitosNaoNaturaisPorRacaPorAno);
                                         String obito_raca_cor = listaObitosNaoNaturaisPorRacaPorAno.get(0);
+                                        System.out.println("html Branca");
+                                        System.out.println(obito_raca_cor);
                                         out.print(obito_raca_cor);
                                 %>
                     },
@@ -164,7 +167,7 @@
                                 %>
                     },
                   ]
-                }
+                },
         );
         const chart2 = new CanvasJS.Chart("MortesPorSexo",
                 {

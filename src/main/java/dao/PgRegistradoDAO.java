@@ -833,45 +833,30 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(OBITOS_POR_RACA_POR_ANO);
              ResultSet result = statement.executeQuery()) {
             while(result.next()) {
+                map = new HashMap<Object,Object>();
+                map.put("x", result.getInt("ano_registro"));
+                map.put("y", result.getInt("qtd_registros"));
                 if(Objects.equals(result.getString("raca_cor"), "branca")){
-                    map = new HashMap<Object,Object>();
-                    map.put("label", result.getInt("ano_registro"));
-                    map.put("y", result.getInt("qtd_registros"));
                     listaObitosPorAno1.add(map);
                 }
                 else{
                     if(Objects.equals(result.getString("raca_cor"), "preta")){
-                        map = new HashMap<Object,Object>();
-                        map.put("label", result.getInt("ano_registro"));
-                        map.put("y", result.getInt("qtd_registros"));
                         listaObitosPorAno2.add(map);
                     }
                     else{
                         if(Objects.equals(result.getString("raca_cor"), "amarela")){
-                            map = new HashMap<Object,Object>();
-                            map.put("label", result.getInt("ano_registro"));
-                            map.put("y", result.getInt("qtd_registros"));
                             listaObitosPorAno3.add(map);
                         }
                         else{
                             if(Objects.equals(result.getString("raca_cor"), "parda")){
-                                map = new HashMap<Object,Object>();
-                                map.put("label", result.getInt("ano_registro"));
-                                map.put("y", result.getInt("qtd_registros"));
                                 listaObitosPorAno4.add(map);
                             }
                             else{
                                 if(Objects.equals(result.getString("raca_cor"), "indígena")){
-                                    map = new HashMap<Object,Object>();
-                                    map.put("label", result.getInt("ano_registro"));
-                                    map.put("y", result.getInt("qtd_registros"));
                                     listaObitosPorAno5.add(map);
                                 }
                                 else{
                                     if(Objects.equals(result.getString("raca_cor"), "não consta")){
-                                        map = new HashMap<Object,Object>();
-                                        map.put("label", result.getInt("ano_registro"));
-                                        map.put("y", result.getInt("qtd_registros"));
                                         listaObitosPorAno6.add(map);
                                     }
                                 }
@@ -914,45 +899,32 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(OBITOS_POR_RACA_POR_ANO_MORTES_NAO_NATURAIS);
              ResultSet result = statement.executeQuery()) {
             while(result.next()) {
+
+                map = new HashMap<Object,Object>();
+                map.put("x", result.getInt("ano_registro"));
+                map.put("y", result.getInt("qtd_registros"));
+
                 if(Objects.equals(result.getString("raca_cor"), "branca")){
-                    map = new HashMap<Object,Object>();
-                    map.put("label", result.getInt("ano_registro"));
-                    map.put("y", result.getInt("qtd_registros"));
                     listaObitosPorAno1.add(map);
                 }
                 else{
                     if(Objects.equals(result.getString("raca_cor"), "preta")){
-                        map = new HashMap<Object,Object>();
-                        map.put("label", result.getInt("ano_registro"));
-                        map.put("y", result.getInt("qtd_registros"));
                         listaObitosPorAno2.add(map);
                     }
                     else{
                         if(Objects.equals(result.getString("raca_cor"), "amarela")){
-                            map = new HashMap<Object,Object>();
-                            map.put("label", result.getInt("ano_registro"));
-                            map.put("y", result.getInt("qtd_registros"));
                             listaObitosPorAno3.add(map);
                         }
                         else{
                             if(Objects.equals(result.getString("raca_cor"), "parda")){
-                                map = new HashMap<Object,Object>();
-                                map.put("label", result.getInt("ano_registro"));
-                                map.put("y", result.getInt("qtd_registros"));
                                 listaObitosPorAno4.add(map);
                             }
                             else{
                                 if(Objects.equals(result.getString("raca_cor"), "indígena")){
-                                    map = new HashMap<Object,Object>();
-                                    map.put("label", result.getInt("ano_registro"));
-                                    map.put("y", result.getInt("qtd_registros"));
                                     listaObitosPorAno5.add(map);
                                 }
                                 else{
                                     if(Objects.equals(result.getString("raca_cor"), "não consta")){
-                                        map = new HashMap<Object,Object>();
-                                        map.put("label", result.getInt("ano_registro"));
-                                        map.put("y", result.getInt("qtd_registros"));
                                         listaObitosPorAno6.add(map);
                                     }
                                 }
@@ -973,10 +945,23 @@ public class PgRegistradoDAO implements RegistradoDAO {
             dataPoints.add(dataPointsObitosPorSexoPorAno);
             dataPointsObitosPorSexoPorAno = gsonObj.toJson(listaObitosPorAno6);
             dataPoints.add(dataPointsObitosPorSexoPorAno);
+
+            System.out.println("Branca");
+            System.out.println(listaObitosPorAno1);
+            System.out.println("Preta");
+            System.out.println(listaObitosPorAno2);
+            System.out.println("Amarela");
+            System.out.println(listaObitosPorAno3);
+            System.out.println("Parda");
+            System.out.println(listaObitosPorAno4);
+            System.out.println("Indígena");
+            System.out.println(listaObitosPorAno5);
+            System.out.println("Não consta");
+            System.out.println(listaObitosPorAno5);
+
         } catch (SQLException error) {
             logger.error("all catch: " + error);
         }
-
         return dataPoints;
     }
 
@@ -995,45 +980,30 @@ public class PgRegistradoDAO implements RegistradoDAO {
         try (PreparedStatement statement = connection.prepareStatement(NASCIMENTOS_POR_RACA_POR_ANO);
              ResultSet result = statement.executeQuery()) {
             while(result.next()) {
+                map = new HashMap<Object,Object>();
+                map.put("x", result.getInt("ano_registro"));
+                map.put("y", result.getInt("qtd_registros"));
                 if(Objects.equals(result.getString("raca_cor"), "branca")){
-                    map = new HashMap<Object,Object>();
-                    map.put("label", result.getInt("ano_registro"));
-                    map.put("y", result.getInt("qtd_registros"));
                     listaNascimentosPorAno1.add(map);
                 }
                 else{
                     if(Objects.equals(result.getString("raca_cor"), "preta")){
-                        map = new HashMap<Object,Object>();
-                        map.put("label", result.getInt("ano_registro"));
-                        map.put("y", result.getInt("qtd_registros"));
                         listaNascimentosPorAno2.add(map);
                     }
                     else{
                         if(Objects.equals(result.getString("raca_cor"), "amarela")){
-                            map = new HashMap<Object,Object>();
-                            map.put("label", result.getInt("ano_registro"));
-                            map.put("y", result.getInt("qtd_registros"));
                             listaNascimentosPorAno3.add(map);
                         }
                         else{
                             if(Objects.equals(result.getString("raca_cor"), "parda")){
-                                map = new HashMap<Object,Object>();
-                                map.put("label", result.getInt("ano_registro"));
-                                map.put("y", result.getInt("qtd_registros"));
                                 listaNascimentosPorAno4.add(map);
                             }
                             else{
                                 if(Objects.equals(result.getString("raca_cor"), "indígena")){
-                                    map = new HashMap<Object,Object>();
-                                    map.put("label", result.getInt("ano_registro"));
-                                    map.put("y", result.getInt("qtd_registros"));
                                     listaNascimentosPorAno5.add(map);
                                 }
                                 else{
                                     if(Objects.equals(result.getString("raca_cor"), "não consta")){
-                                        map = new HashMap<Object,Object>();
-                                        map.put("label", result.getInt("ano_registro"));
-                                        map.put("y", result.getInt("qtd_registros"));
                                         listaNascimentosPorAno6.add(map);
                                     }
                                 }
