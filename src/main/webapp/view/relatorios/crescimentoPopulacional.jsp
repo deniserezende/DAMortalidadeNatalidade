@@ -108,7 +108,8 @@
                   },
                   axisY:{
                     title: "Quantidade de mortes",
-                    includeZero: true
+                    includeZero: true,
+                    valueFormatString: "#.###"
                   },
                   legend:{
                     verticalAlign: "bottom",
@@ -145,7 +146,11 @@
                   backgroundColor: "#fafafa",
                   axisX: {
                     valueFormatString: "####",
-                    interval: 1
+                    interval: 1,
+                  },
+                  axisY: {
+                    includeZero: true,
+                    valueFormatString: "#.###"
                   },
                   data: [
                     {
@@ -215,6 +220,10 @@
                   axisX: {
                     valueFormatString: "####",
                     interval: 1
+                  },
+                  axisY: {
+                    includeZero: true,
+                    valueFormatString: "#.###"
                   },
                   data: [
                     {

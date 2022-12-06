@@ -88,7 +88,7 @@ public class CargaController extends HttpServlet{
                     dispatcher.forward(request, response);
                 }
                 catch(Exception error) {
-                    logger.error("ParseException catch: " + error);
+                    //logger.error("ParseException catch: " + error);
                     request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
                     response.sendRedirect(request.getContextPath() + servletPath);
                 }
@@ -110,7 +110,7 @@ public class CargaController extends HttpServlet{
                     dispatcher.forward(request, response);
                 }
                 catch(Exception error) {
-                    logger.error("ParseException catch: " + error);
+                    //logger.error("ParseException catch: " + error);
                     request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
                     response.sendRedirect(request.getContextPath() + servletPath);
                 }
@@ -136,7 +136,7 @@ public class CargaController extends HttpServlet{
                     dispatcher.forward(request, response);
                 }
                 catch(Exception error) {
-                    logger.error("ParseException catch: " + error);
+                    //logger.error("ParseException catch: " + error);
                     request.getSession().setAttribute("error", "Não foi possível carregar os dados para plotar o gráfico");
                     response.sendRedirect(request.getContextPath() + servletPath);
                 }
@@ -288,7 +288,7 @@ public class CargaController extends HttpServlet{
                         uploadedFile.delete();
                     }
                     else{
-                        logger.error("No file uploaded");
+                        //logger.error("No file uploaded");
                     }
 
                     daoCarga = daoFactory.getCargaDAO();
@@ -300,22 +300,22 @@ public class CargaController extends HttpServlet{
                     response.sendRedirect(request.getContextPath() + "/historico");
 
                 } catch (ParseException error) {
-                    logger.error("ParseException catch: " + error);
+                    //logger.error("ParseException catch: " + error);
 
                     session.setAttribute("error", "O formato de data não é válido. Por favor entre data no formato dd/mm/aaaa");
                     response.sendRedirect(request.getContextPath() + servletPath);
                 } catch (FileUploadException error) {
-                    logger.error("FileUploadException catch: " + error);
+                    //logger.error("FileUploadException catch: " + error);
 
                     session.setAttribute("error", "Erro ao fazer upload do arquivo.");
                     response.sendRedirect(request.getContextPath() + servletPath);
                 } catch (ClassNotFoundException | IOException | SQLException error) {
-                    logger.error("ClassNotFoundException | IOException | SQLException catch: " + error);
+                    //logger.error("ClassNotFoundException | IOException | SQLException catch: " + error);
 
                     session.setAttribute("error", error.getMessage());
                     response.sendRedirect(request.getContextPath() + servletPath);
                 } catch (Exception error) {
-                    logger.error("Exception catch: " + error);
+                    //logger.error("Exception catch: " + error);
 
                     session.setAttribute("error", "Erro ao gravar arquivo no servidor.");
                     response.sendRedirect(request.getContextPath() + servletPath);
@@ -355,7 +355,7 @@ public class CargaController extends HttpServlet{
         String separator_regex = "\\s*" + separator.toString() + "\\s*";
         // Creating a list of all the columns names
         List<String> first_line = Arrays.asList(lines.get(0).split(separator_regex));
-        logger.error(first_line);
+        //logger.error(first_line);
 
         List<String> next_line;
         // Loop through the lines
@@ -374,42 +374,42 @@ public class CargaController extends HttpServlet{
             registrado.getObito().setRegistro(registro);
             logger.info("objetcts linked");
 
-            logger.error(first_line.size());
+            //logger.error(first_line.size());
             // Loop through the columns inserting attributes in object
             for(int j = 0; j < first_line.size(); j++){
                 // if next line doesn't have the same amount of columns program shouldn't try to insert
                 if(j >= next_line.size()){
-                    logger.error("Line amount of columns isn't equal to the first line\nBecause last columns are null");
+                    //logger.error("Line amount of columns isn't equal to the first line\nBecause last columns are null");
                     break;
                 }
 
                 if(next_line.get(j).equals("") || next_line.get(j) == ""){
-                    logger.warn("next == vazio");
+                    //logger.warn("next == vazio");
                 }
                 else{
                     // If is a mortality attribute then insert
-                    logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
+                    //logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
                     insertInObjectMortality(registro, obito, registrado, next_line, j, first_line.get(j));
                 }
             }
             // Creating in the database the tuple
             try{
                 Registro registro_ = registrado.getObito().getRegistro();
-                logger.error("ReadCSVMortality: \nId = " + registro_.getId_registro() +
-                        "\nTipo = " + registro_.getTipo_registro() + "\nAno = " + registro_.getAno_registro());
+                //logger.error("ReadCSVMortality: \nId = " + registro_.getId_registro() +
+                        //"\nTipo = " + registro_.getTipo_registro() + "\nAno = " + registro_.getAno_registro());
                 Registrado registrado_found = daoRegistrado.read_obito(registro_.getId_registro(),
                         registro_.getTipo_registro(), registro_.getAno_registro());
 
                 if(registrado_found == null){
-                    logger.info("ReadCSVMortality: Tried to create registrado.");
+                    //logger.info("ReadCSVMortality: Tried to create registrado.");
                     daoRegistrado.create(registrado);
                 }
                 else{
-                    logger.info("ReadCSVMortality: Tried to update registrado.");
+                   // logger.info("ReadCSVMortality: Tried to update registrado.");
                     daoRegistrado.update(registrado);
                 }
             }catch (Exception error){
-                logger.error("ReadCSVMortality: Tried to create/update registrado: " + error);
+                //logger.error("ReadCSVMortality: Tried to create/update registrado: " + error);
             }
         }
 
@@ -418,10 +418,10 @@ public class CargaController extends HttpServlet{
     protected String getStringWithoutQuotationMarks(String string){
         if(string.contains("\"")){
             String[] splited_string = string.split("\"");
-            logger.error("In getStringWithoutQuotationMarks: " + splited_string[1]);
+            //logger.error("In getStringWithoutQuotationMarks: " + splited_string[1]);
             return splited_string[1];
         }
-        logger.error("In getStringWithoutQuotationMarks string: " + string);
+        //logger.error("In getStringWithoutQuotationMarks string: " + string);
         return string;
     }
 
@@ -581,7 +581,7 @@ public class CargaController extends HttpServlet{
                     }
                 }
                 else{
-                    logger.error("Idade Falecido inválida!");
+                    //logger.error("Idade Falecido inválida!");
                 }
                 //obito.setIdade_falecido(Integer.valueOf(string));
                 break;
@@ -622,15 +622,15 @@ public class CargaController extends HttpServlet{
             // Loop through the columns inserting attributes in object
             for(int j = 0; j < first_line.size(); j++){
                 if(j >= next_line.size()){
-                    logger.error("Line amount of columns isn't equal to the first line\nBecause last columns are null");
+                    //logger.error("Line amount of columns isn't equal to the first line\nBecause last columns are null");
                     break;
                 }
 
                 if(next_line.get(j).equals("") || next_line.get(j) == ""){
-                    logger.info("next == vazio");
+                    //logger.info("next == vazio");
                 }
                 else{
-                    logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
+                    //logger.error("Inserting attribute " + first_line.get(j) + " in object; value = " + next_line.get(j));
                     insertInObjectNatality(registro, nascimento, registrado, next_line, j, first_line.get(j));
                 }
             }
@@ -638,21 +638,21 @@ public class CargaController extends HttpServlet{
             // Creating in the database the tuple
             try{
                 Registro registro_ = registrado.getNascimento().getRegistro();
-                logger.error("ReadCSVNatality: \nId = " + registro_.getId_registro() +
-                        "\nTipo = " + registro_.getTipo_registro() + "\nAno = " + registro_.getAno_registro());
+                //logger.error("ReadCSVNatality: \nId = " + registro_.getId_registro() +
+                        //"\nTipo = " + registro_.getTipo_registro() + "\nAno = " + registro_.getAno_registro());
                 Registrado registrado_found = daoRegistrado.read_nascimento(registro_.getId_registro(),
                         registro_.getTipo_registro(), registro_.getAno_registro());
 
                 if(registrado_found == null){
-                    logger.info("ReadCSVNatality: Tried to create registrado.");
+                    //logger.info("ReadCSVNatality: Tried to create registrado.");
                     daoRegistrado.create(registrado);
                 }
                 else{
-                    logger.info("ReadCSVNatality: Tried to update registrado.");
+                    //logger.info("ReadCSVNatality: Tried to update registrado.");
                     daoRegistrado.update(registrado);
                 }
             }catch (Exception error){
-                logger.error("ReadCSVNatality: Tried to create/update registrado: " + error);
+                //logger.error("ReadCSVNatality: Tried to create/update registrado: " + error);
             }
         }
 
