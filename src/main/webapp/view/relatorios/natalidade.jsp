@@ -97,13 +97,14 @@
           title: {
             text: "Idade média das mães ao longo dos anos"
           },
+          backgroundColor: "#fafafa",
           animationEnabled: true,
           axisX: {
             title: "Ano"
           },
           axisY: {
             title: "Idade (anos)",
-            includeZero: true
+            includeZero: true,
           },
           data: [
             {
@@ -147,6 +148,7 @@
           title:{
             text: "Tipos de parto",
           },
+          backgroundColor: "#fafafa",
           data: [{
             type: "doughnut",
             startAngle: 60,

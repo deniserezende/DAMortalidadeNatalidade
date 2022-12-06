@@ -99,6 +99,7 @@
                     text: "Registros ao longo dos anos",
                     margin: 15
                   },
+                  backgroundColor: "#fafafa",
                   toolTip:{
                     shared: true
                   },
@@ -141,6 +142,7 @@
                   title:{
                     text: "Obitos por raça"
                   },
+                  backgroundColor: "#fafafa",
                   axisX: {
                     valueFormatString: "MMM",
                     interval: 1,
@@ -210,6 +212,7 @@
                   title:{
                     text: "Nascimentos por raça"
                   },
+                  backgroundColor: "#fafafa",
                   axisX: {
                     valueFormatString: "MMM",
                     interval: 1,

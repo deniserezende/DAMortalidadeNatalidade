@@ -98,6 +98,7 @@
                   title: {
                     text: "Mortes não naturais"
                   },
+                  backgroundColor: "#fafafa",
                   axisX: {
                     valueFormatString: "MMM",
                     interval: 1,
@@ -167,6 +168,7 @@
                   title: {
                     text: "Mortes/sexo"
                   },
+                  backgroundColor: "#fafafa",
                   axisY: {
                     title: "Quantidade de mortes",
                     includeZero: true
@@ -201,6 +203,7 @@
                   title: {
                     text: "Mortes por ano"
                   },
+                  backgroundColor: "#fafafa",
                   axisY: {
                     title: "Quantidade",
                     includeZero: true
@@ -226,7 +229,7 @@
         chart3.render();
       }
     </script>
-
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <div id="MortesNaoNaturaisPorRaca" style="height: 300px; width: 100%;"></div>
     <div id="MortesPorSexo" style="height: 300px; width: 100%;"></div>
     <div id="MortesPorAno" style="height: 300px; width: 100%;"></div>
