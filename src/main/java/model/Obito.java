@@ -86,4 +86,3 @@ public class Obito {
         this.hora_obito = hora_obito;
     }
 }
-

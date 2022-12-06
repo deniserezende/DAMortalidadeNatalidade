@@ -4,12 +4,22 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class Carga {
+
+    private String titulo_carga;
     private Date data_carga;
     private Time hora_carga;
     private String responsavel;
     private String email;
     private String nome_arquivo;
     private Integer tipo_carga;
+
+    public String getTitulo_carga() {
+        return titulo_carga;
+    }
+
+    public void setTitulo_carga(String titulo_carga) {
+        this.titulo_carga = titulo_carga;
+    }
 
     public Date getData_carga() {
         return data_carga;
