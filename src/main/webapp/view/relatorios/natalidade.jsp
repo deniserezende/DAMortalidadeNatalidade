@@ -164,7 +164,9 @@
         graficoTipoParto.render();
       }
     </script>
+    <br/>
     <div id="idadeMaesPorAno" style="height: 300px; width: 100%;"></div>
+    <br/>
     <div id="graficoTipoParto" style="height: 300px; width: 100%;"></div>
   </div>
 </div>

@@ -281,8 +281,11 @@
       }
     </script>
     <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <br/>
     <div id="CrescimentoPopulacional" style="height: 300px; width: 100%;"></div>
+    <br/>
     <div id="MortesPorRaca" style="height: 300px; width: 100%;"></div>
+    <br/>
     <div id="NascimentosPorRaca" style="height: 300px; width: 100%;"></div>
   </div>
 </div>

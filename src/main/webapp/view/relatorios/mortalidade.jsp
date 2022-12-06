@@ -172,11 +172,11 @@
         const chart2 = new CanvasJS.Chart("MortesPorSexo",
                 {
                   title: {
-                    text: "Mortes/sexo"
+                    text: "Obitos por sexo"
                   },
                   backgroundColor: "#fafafa",
                   axisY: {
-                    title: "Quantidade de mortes",
+                    title: "Quantidade de registros de obitos",
                     includeZero: true
                   },
                   data: [
@@ -207,18 +207,16 @@
         const chart3 = new CanvasJS.Chart("MortesPorAno",
                 {
                   title: {
-                    text: "Mortes por ano"
+                    text: "Obitos por ano"
                   },
                   backgroundColor: "#fafafa",
                   axisY: {
-                    title: "Quantidade",
+                    title: "Quantidade de registros",
                     includeZero: true
                   },
                   data: [
                     {
                       type: "splineArea",
-                      showInLegend: true,
-                      legendText: "Anos",
                       markerSize: 5,
                       color: "rgba(54,158,173,.7)",
                       dataPoints: <%
@@ -236,8 +234,11 @@
       }
     </script>
     <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <br/>
     <div id="MortesNaoNaturaisPorRaca" style="height: 300px; width: 100%;"></div>
+    <br/>
     <div id="MortesPorSexo" style="height: 300px; width: 100%;"></div>
+    <br/>
     <div id="MortesPorAno" style="height: 300px; width: 100%;"></div>
 
   </div>
